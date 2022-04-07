@@ -12,7 +12,7 @@ process.on("uncaughtException", (err) => {
 //requiring app file
 import app from "./app.js";
 //CONNECT TO DATABASE
-db.connect();
+// db.connect();
 
 //Starting the server
 const server = app.listen(PORT, () => {
