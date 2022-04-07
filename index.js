@@ -1,5 +1,6 @@
 //Getting the port being used from config file
 import { PORT } from "./utils/config.js";
+import db from "./models/database.js";
 
 //HANDLILNG UNCAUGHT EXCEPTION!
 process.on("uncaughtException", (err) => {
@@ -11,13 +12,12 @@ process.on("uncaughtException", (err) => {
 //requiring app file
 import app from "./app.js";
 //CONNECT TO DATABASE
-// require("./model/dbModel/database");
+db.connect();
 
 //Starting the server
 const server = app.listen(PORT, () => {
   console.log(`server is running on ${PORT} ...`);
 });
-
 
 //HANDLILNG UNCAUGHT REJECTION!
 process.on("unhandledRejection", (err) => {

@@ -13,7 +13,6 @@ import { NODE_ENV } from "./utils/config.js";
 
 const app = express();
 
-
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -35,7 +34,6 @@ if (NODE_ENV !== "production") {
 }
 
 //ROUTES
-
 
 //client/build
 if (NODE_ENV === "production") {
