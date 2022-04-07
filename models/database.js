@@ -25,6 +25,21 @@ class Database {
       console.log("Connected!");
     });
   };
+
+  executeQuery = (sqlQuery, params) => {
+    var that = this;
+    return new Promise((resolve, reject) => {
+      that.db
+        .promise()
+        .query(sqlQuery, params)
+        .then((res) => {
+          resolve({ data: res[0] });
+        })
+        .catch((error) => {
+          reject({ error: error.message });
+        });
+    });
+  };
 }
 
 const db = new Database();
