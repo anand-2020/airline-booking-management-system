@@ -4,3 +4,6 @@ export const MYSQL_HOST = process.env.MYSQL_HOST;
 export const MYSQL_USER = process.env.MYSQL_USER;
 export const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD;
 export const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
+export const JWT_COOKIE_EXPIRES_IN = process.env.JWT_COOKIE_EXPIRES_IN;
+export const JWT_SECRET = process.env.JWT_SECRET;
+export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
