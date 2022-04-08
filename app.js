@@ -8,8 +8,7 @@ import morgan from "morgan";
 import AppError from "./utils/appError.js";
 import errorHandler from "./utils/errorHandler.js";
 import { NODE_ENV } from "./utils/config.js";
-
-//ROUTERS
+import authRouter from "./routes/authRouter.js";
 
 const app = express();
 
@@ -43,6 +42,8 @@ if (NODE_ENV === "production") {
     res.sendFile(resolve(__dirname, "client", "build", "index.html"));
   });
 }
+//ROUTERS
+app.use("/api/auth", authRouter);
 
 //NO URL
 app.all("*", (req, res, next) => {
