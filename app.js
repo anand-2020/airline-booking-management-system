@@ -9,6 +9,10 @@ import AppError from "./utils/appError.js";
 import errorHandler from "./utils/errorHandler.js";
 import { NODE_ENV } from "./utils/config.js";
 import authRouter from "./routes/authRouter.js";
+import customerRouter from "./routes/customerRouter.js";
+import ticketRouter from "./routes/ticketRouter.js";
+
+//ROUTERS
 
 const app = express();
 
@@ -33,6 +37,8 @@ if (NODE_ENV !== "production") {
 }
 
 //ROUTES
+app.use("/api/customer", customerRouter);
+app.use("/api/ticket", ticketRouter);
 
 //client/build
 if (NODE_ENV === "production") {

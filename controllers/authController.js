@@ -78,7 +78,7 @@ export const restrictTo = (...roles) => {
   return catchAsync(async (req, res, next) => {
     const id = req.user.id;
     const user = await db.query(
-      `SELECT role FROM CUSTOMERS WHERE CUSTOMER_ID=${id}`
+      `SELECT ROLE FROM CUSTOMERS WHERE CUSTOMER_ID=${id}`
     );
     if (!user.data.length) {
       return new AppError(
