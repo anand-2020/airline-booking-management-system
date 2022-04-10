@@ -5,7 +5,9 @@ import {
   MYSQL_PASSWORD,
   MYSQL_DATABASE,
 } from "../utils/config.js";
-import { INIT } from "./schema.js";
+import { SCHEMA } from "./schema.js";
+import { DATA } from "./data.js";
+import { STORED_OBJECTS } from "./stored_objects.js";
 import { separateSqlCommands } from "./parser.js";
 
 class Database {
@@ -47,12 +49,19 @@ class Database {
 const db = new Database();
 db.connect();
 
-const sqlQueries = separateSqlCommands(INIT);
+const sqlSchema = separateSqlCommands(SCHEMA);
+sqlSchema.forEach((query) => db.executeQuery(query));
+
+const sqlData = separateSqlCommands(DATA);
+sqlData.forEach((query) => db.executeQuery(query));
+
+const sqlStoredObjects = separateSqlCommands(STORED_OBJECTS);
+sqlStoredObjects.forEach((query) => db.executeQuery(query));
 
 // console.log(sqlQueries);
 
 // sqlQueries.forEach((query) => db.executeQuery(query));
 
-// db.executeQuery('select * from flight_date').then(res=>console.log(res.data)).catch(err=>console.log(err));
+db.executeQuery("CALL SHOW_FLIGHTS('af', 'MIAMI', 'USA', 'DUBAI', 'UAE', '2022-04-09')").then(res=>console.log(res.data[0])).catch(err=>console.log(err));
 
 export default db;
