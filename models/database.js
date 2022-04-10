@@ -49,19 +49,21 @@ class Database {
 const db = new Database();
 db.connect();
 
+console.log("SQL data importing...");
+
 const sqlSchema = separateSqlCommands(SCHEMA);
-sqlSchema.forEach((query) => db.executeQuery(query));
+sqlSchema.forEach(async (query) => await db.executeQuery(query));
 
 const sqlData = separateSqlCommands(DATA);
-sqlData.forEach((query) => db.executeQuery(query));
+sqlData.forEach(async (query) => await db.executeQuery(query));
 
 const sqlStoredObjects = separateSqlCommands(STORED_OBJECTS);
-sqlStoredObjects.forEach((query) => db.executeQuery(query));
+sqlStoredObjects.forEach(async (query) => await db.executeQuery(query));
 
-// console.log(sqlQueries);
+console.log("Data imported successfully!");
 
 // sqlQueries.forEach((query) => db.executeQuery(query));
 
-db.executeQuery("CALL SHOW_FLIGHTS('af', 'MIAMI', 'USA', 'DUBAI', 'UAE', '2022-04-09')").then(res=>console.log(res.data[0])).catch(err=>console.log(err));
+db.executeQuery("CALL SHOW_FLIGHT_PATH_FOR_ADMIN()").then(res=>console.log(res.data[0])).catch(err=>console.log(err));
 
 export default db;
