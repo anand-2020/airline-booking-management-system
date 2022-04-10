@@ -60,7 +60,7 @@ export const protect = catchAsync(async (req, res, next) => {
   if (!decoded) throw new AppError("Your Password or email is Wrong");
 
   const user = await db.executeQuery(
-    `SELECT * FROM users WHERE id=${decoded.id}`
+    `SELECT * FROM CUSTOMERS WHERE CUSTOMER_ID=${decoded.id}`
   );
   if (!user.data.length) {
     return new AppError(
@@ -77,7 +77,9 @@ export const protect = catchAsync(async (req, res, next) => {
 export const restrictTo = (...roles) => {
   return catchAsync(async (req, res, next) => {
     const id = req.user.id;
-    const user = await db.query(`SELECT role FROM users WHERE id=${id}`);
+    const user = await db.query(
+      `SELECT ROLE FROM CUSTOMERS WHERE CUSTOMER_ID=${id}`
+    );
     if (!user.data.length) {
       return new AppError(
         "The user belonging to this token does no longer exist.",
@@ -103,7 +105,7 @@ export const login = catchAsync(async (req, res, next) => {
   }
   // 2) Check if user exists && password is correct
   const user = await db.executeQuery(
-    `SELECT * FROM users WHERE email='${email}'`
+    `SELECT * FROM CUSTOMERS WHERE email='${email}'`
   );
   console.log(user);
   //1) find the user
@@ -111,12 +113,37 @@ export const login = catchAsync(async (req, res, next) => {
     return new AppError("Your email or password is wrong.", 401);
 
   //2) check if the current password is correct
-  if (!(await bcrypt.compare(password, user.data[0].password))) {
+  if (!(await bcrypt.compare(password, user.data[0].PASSWORD))) {
     return new AppError("Your email or password is wrong.", 401);
   }
 
   // 3) If everything ok, send token to client
   createSendToken(user.data[0], 200, res);
+});
+
+export const signup = catchAsync(async (req, res, next) => {
+  const newCustomer = {
+    CUSTOMER_ID: req.body.CUSTOMER_ID,
+    CNAME: req.body.CNAME,
+    EMAIL: req.body.EMAIL,
+    PASSWORD: req.body.PASSWORD,
+    GENDER: req.body.GENDER,
+    DOB: req.body.DOB,
+    ROLE: req.body.ROLE,
+    PROFESSION: req.body.PROFESSION,
+    PHONE_NO: req.body.PHONE_NO,
+    ADDRESS: req.body.ADDRESS,
+  };
+
+  const salt = await bcrypt.genSalt(10);
+  newCustomer.PASSWORD = await bcrypt.hash(newCustomer.PASSWORD, salt);
+  const resp = await db.executeQuery(
+    `INSERT INTO CUSTOMERS VALUES ('${newCustomer.CUSTOMER_ID}', '${newCustomer.PASSWORD}', '${newCustomer.EMAIL}', '${newCustomer.CNAME}', '${newCustomer.GENDER}', STR_TO_DATE('${newCustomer.DOB}','%Y/%m/%d'), '${newCustomer.ROLE}', '${newCustomer.PROFESSION}', '${newCustomer.PHONE_NO}', '${newCustomer.ADDRESS}')`
+  );
+
+  console.log(resp);
+
+  createSendToken(newCustomer, 201, res);
 });
 
 export const logout = catchAsync(async (req, res, next) => {

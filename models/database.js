@@ -51,7 +51,7 @@ const sqlQueries = separateSqlCommands(INIT);
 
 // console.log(sqlQueries);
 
-sqlQueries.forEach((query) => db.executeQuery(query));
+// sqlQueries.forEach((query) => db.executeQuery(query));
 
 // db.executeQuery('select * from flight_date').then(res=>console.log(res.data)).catch(err=>console.log(err));
 
