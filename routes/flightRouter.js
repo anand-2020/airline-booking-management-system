@@ -1,11 +1,13 @@
 import { Router } from "express";
+import {
+  getAllFlights,
+  addFlight,
+  updateFlight,
+} from "../controllers/flightController.js";
 
 const router = Router();
 
-//LOGIN
-router.post("/", login);
-
-//LOG OUT
-router.post("/logout", logout);
+router.route("/").get(getAllFlights).post(addFlight);
+router.route("/:flightId").patch(updateFlight);
 
 export default router;

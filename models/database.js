@@ -21,12 +21,15 @@ class Database {
   }
 
   connect = () => {
-    this.db.connect((err) => {
-      if (err) {
-        console.error("Error connecting to db!");
-        throw err;
-      }
-      console.log("Connected!");
+    var that = this;
+    return new Promise((resolve, reject) => {
+      that.db
+        .promise()
+        .connect()
+        .then((res) => {
+          resolve();
+        })
+        .catch((err) => reject());
     });
   };
 
@@ -44,29 +47,35 @@ class Database {
         });
     });
   };
+
+  importData = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sqlSchema = separateSqlCommands(SCHEMA);
+        for (let i = 0; i < sqlSchema.length; i++)
+          await db.executeQuery(sqlSchema[i]);
+        const sqlData = separateSqlCommands(DATA);
+        for (let i = 0; i < sqlData.length; i++)
+          await db.executeQuery(sqlData[i]);
+        const sqlStoredObjects = separateSqlCommands(STORED_OBJECTS);
+        for (let i = 0; i < sqlStoredObjects.length; i++)
+          await db.executeQuery(sqlStoredObjects[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
+  init = async () => {
+    console.log("Connecting to DB...");
+    await this.connect();
+    console.log("Connected to DB! Importing Data...");
+    await this.importData();
+    console.log("Data Imported!");
+  };
 }
 
 const db = new Database();
-
-db.connect();
-
-console.log("SQL data importing...");
-
-const sqlSchema = separateSqlCommands(SCHEMA);
-sqlSchema.forEach(async (query) => await db.executeQuery(query));
-
-const sqlData = separateSqlCommands(DATA);
-sqlData.forEach(async (query) => await db.executeQuery(query));
-
-const sqlStoredObjects = separateSqlCommands(STORED_OBJECTS);
-sqlStoredObjects.forEach(async (query) => await db.executeQuery(query));
-
-console.log("Data imported successfully!");
-
-// sqlQueries.forEach((query) => db.executeQuery(query));
-
-db.executeQuery("CALL SHOW_FLIGHT_PATH_FOR_ADMIN()")
-  .then((res) => console.log(res.data[0]))
-  .catch((err) => console.log(err));
-
 export default db;

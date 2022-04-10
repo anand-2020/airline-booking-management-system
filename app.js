@@ -11,6 +11,7 @@ import { NODE_ENV } from "./utils/config.js";
 import authRouter from "./routes/authRouter.js";
 import customerRouter from "./routes/customerRouter.js";
 import ticketRouter from "./routes/ticketRouter.js";
+import flightRouter from "./routes/flightRouter.js";
 
 //ROUTERS
 
@@ -37,8 +38,10 @@ if (NODE_ENV !== "production") {
 }
 
 //ROUTES
+app.use("/api/auth", authRouter);
 app.use("/api/customer", customerRouter);
 app.use("/api/ticket", ticketRouter);
+app.use("/api/flight", flightRouter);
 
 //client/build
 if (NODE_ENV === "production") {
@@ -48,8 +51,6 @@ if (NODE_ENV === "production") {
     res.sendFile(resolve(__dirname, "client", "build", "index.html"));
   });
 }
-//ROUTERS
-app.use("/api/auth", authRouter);
 
 //NO URL
 app.all("*", (req, res, next) => {

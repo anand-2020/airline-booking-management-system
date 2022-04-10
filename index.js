@@ -1,6 +1,6 @@
 //Getting the port being used from config file
 import { PORT } from "./utils/config.js";
-import db from "./models/database.js";
+import Database from "./models/database.js";
 
 //HANDLILNG UNCAUGHT EXCEPTION!
 process.on("uncaughtException", (err) => {
@@ -12,7 +12,8 @@ process.on("uncaughtException", (err) => {
 //requiring app file
 import app from "./app.js";
 //CONNECT TO DATABASE
-// db.connect();
+// const db = new Database();
+Database.init();
 
 //Starting the server
 const server = app.listen(PORT, () => {
