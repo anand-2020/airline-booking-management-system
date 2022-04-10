@@ -37,8 +37,7 @@ const getCustomer = catchAsync(async (req, res, next) => {
 
 // TODO : testing
 const getCustomerTickets = catchAsync(async (req, res, next) => {
-  const query =
-    "SELECT * FROM TICKET WHERE CUSTOMER_ID = ? ORDER BY DATE_OF_BOOKING DESC";
+  const query = `SELECT * FROM TICKET WHERE CUSTOMER_ID = ? ORDER BY TIME_OF_BOOKING DESC`;
 
   const tickets = await db.executeQuery(query, req.params.id);
 
