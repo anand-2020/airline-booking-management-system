@@ -114,7 +114,7 @@ class Database {
     await this.importStoredObjects();
     await this.importFlightDateData();
     console.log("Data Imported!");
-    console.log((await this.executeQuery("select * from customers where customer_id = ? and password = ?", ['af', 'QWERTY'])).data);
+    console.log((await this.executeQuery("select * from CUSTOMERS where CUSTOMER_ID = ? and PASSWORD = ?", ['af', 'QWERTY'])).data);
   };
 }
 
