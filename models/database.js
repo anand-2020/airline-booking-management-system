@@ -49,15 +49,37 @@ class Database {
     });
   };
 
-  importData = () => {
+  importSchema = () => {
     return new Promise(async (resolve, reject) => {
       try {
         const sqlSchema = separateSqlCommands(SCHEMA);
         for (let i = 0; i < sqlSchema.length; i++)
           await db.executeQuery(sqlSchema[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
+  importData = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
         const sqlData = separateSqlCommands(DATA);
         for (let i = 0; i < sqlData.length; i++)
           await db.executeQuery(sqlData[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
+  importStoredObjects = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
         const sqlStoredObjects = separateSqlCommands(STORED_OBJECTS);
         for (let i = 0; i < sqlStoredObjects.length; i++)
           await db.executeQuery(sqlStoredObjects[i]);
@@ -87,7 +109,9 @@ class Database {
     console.log("Connecting to DB...");
     await this.connect();
     console.log("Connected to DB! Importing Data...");
+    await this.importSchema();
     await this.importData();
+    await this.importStoredObjects();
     await this.importFlightDateData();
     console.log("Data Imported!");
     console.log((await this.executeQuery("select * from customers where customer_id = ? and password = ?", ['af', 'QWERTY'])).data);
