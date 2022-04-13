@@ -7,6 +7,7 @@ import {
 } from "../utils/config.js";
 import { SCHEMA } from "./schema.js";
 import { DATA } from "./data.js";
+import { FLIGHT_DATE_DATA } from "./flight_date_data.js";
 import { STORED_OBJECTS } from "./stored_objects.js";
 import { separateSqlCommands } from "./parser.js";
 
@@ -68,11 +69,26 @@ class Database {
     });
   };
 
+  importFlightDateData = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sqlFlightDateData = separateSqlCommands(FLIGHT_DATE_DATA);
+        for (let i = 0; i < sqlFlightDateData.length; i++)
+          await db.executeQuery(sqlFlightDateData[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
   init = async () => {
     console.log("Connecting to DB...");
     await this.connect();
     console.log("Connected to DB! Importing Data...");
-    // await this.importData();
+    await this.importData();
+    await this.importFlightDateData();
     console.log("Data Imported!");
     console.log((await this.executeQuery("select * from customers where customer_id = ? and password = ?", ['af', 'QWERTY'])).data);
   };
