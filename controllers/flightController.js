@@ -65,14 +65,35 @@ export const updateFlight = catchAsync(async (req, res, next) => {
   let func = null;
   let resp;
   if (req.body.CONTINUED_TILL) {
-    func = `CHANGE_CONTINUING_DATE_FLIGHT_PATH('${flightId}','${req.body.CONTINUED_TILL}')`;
+    func = `CHANGE_LEASE_DATE_FLIGHT_PATH('${flightId}','${req.body.CONTINUED_TILL}')`;
     resp = await db.executeQuery(
-      `SELECT CHANGE_CONTINUING_DATE_FLIGHT_PATH('${flightId}','${req.body.CONTINUED_TILL}')`
+      `SELECT CHANGE_LEASE_DATE_FLIGHT_PATH('${flightId}','${req.body.CONTINUED_TILL}')`
     );
-  }
-  //   console.log(resp.data[0][func]);
 
-  res.status(200).json({
-    status: func != null && resp.data[0][func] ? "success" : "fail",
-  });
+    res.status(200).json({
+      status: func != null && resp.data[0][func] ? "success" : "fail",
+    });
+  } else if (req.body.DEPARTURE_DATE && req.body.DELAY_TIME) {
+    func = `DELAY_FLIGHT_DATE('${flightId}','${req.body.DEPARTURE_DATE}','${req.body.DELAY_TIME}')`;
+    resp = await db.executeQuery(
+      `CALL DELAY_FLIGHT_DATE('${flightId}','${req.body.DEPARTURE_DATE}','${req.body.DELAY_TIME}')`
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: resp.data[0],
+    });
+  } else if (req.body.CANCEL_DATE) {
+    func = `CANCEL_FLIGHT_DATE('${flightId}','${req.body.CANCEL_DATE}')`;
+    resp = await db.executeQuery(
+      `CALL CANCEL_FLIGHT_DATE('${flightId}','${req.body.CANCEL_DATE}')`
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: resp.data[0],
+    });
+  }
+
+  //   console.log(resp.data[0][func]);
 });
