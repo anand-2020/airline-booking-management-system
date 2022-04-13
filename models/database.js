@@ -72,8 +72,9 @@ class Database {
     console.log("Connecting to DB...");
     await this.connect();
     console.log("Connected to DB! Importing Data...");
-    await this.importData();
+    // await this.importData();
     console.log("Data Imported!");
+    console.log((await this.executeQuery("select * from customers where customer_id = ? and password = ?", ['af', 'QWERTY'])).data);
   };
 }
 
