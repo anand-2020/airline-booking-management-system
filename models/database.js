@@ -7,6 +7,7 @@ import {
 } from "../utils/config.js";
 import { SCHEMA } from "./schema.js";
 import { DATA } from "./data.js";
+import { FLIGHT_DATE_DATA } from "./flight_date_data.js";
 import { STORED_OBJECTS } from "./stored_objects.js";
 import { separateSqlCommands } from "./parser.js";
 
@@ -48,18 +49,54 @@ class Database {
     });
   };
 
-  importData = () => {
+  importSchema = () => {
     return new Promise(async (resolve, reject) => {
       try {
         const sqlSchema = separateSqlCommands(SCHEMA);
         for (let i = 0; i < sqlSchema.length; i++)
           await db.executeQuery(sqlSchema[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
+  importData = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
         const sqlData = separateSqlCommands(DATA);
         for (let i = 0; i < sqlData.length; i++)
           await db.executeQuery(sqlData[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
+  importStoredObjects = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
         const sqlStoredObjects = separateSqlCommands(STORED_OBJECTS);
         for (let i = 0; i < sqlStoredObjects.length; i++)
           await db.executeQuery(sqlStoredObjects[i]);
+
+        resolve();
+      } catch (err) {
+        reject();
+      }
+    });
+  };
+
+  importFlightDateData = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sqlFlightDateData = separateSqlCommands(FLIGHT_DATE_DATA);
+        for (let i = 0; i < sqlFlightDateData.length; i++)
+          await db.executeQuery(sqlFlightDateData[i]);
 
         resolve();
       } catch (err) {
@@ -72,7 +109,10 @@ class Database {
     console.log("Connecting to DB...");
     await this.connect();
     console.log("Connected to DB! Importing Data...");
-    // await this.importData();
+    await this.importSchema();
+    await this.importData();
+    await this.importStoredObjects();
+    await this.importFlightDateData();
     console.log("Data Imported!");
     console.log((await this.executeQuery("select * from CUSTOMERS where CUSTOMER_ID = ? and PASSWORD = ?", ['af', 'QWERTY'])).data);
   };
