@@ -46,6 +46,8 @@ import breakpoints from "assets/theme/base/breakpoints";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 import MDButton from "components/MDButton";
 
+import TicketInformation from "../../../tickets/components/TicketInformation";
+
 function Header({ children }) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
@@ -253,7 +255,8 @@ function Header({ children }) {
           </Grid>
         </Grid>
       </MDBox>
-      <Card
+      <TicketInformation></TicketInformation>
+      {/* <Card
         sx={{
           position: "relative",
           mt: -8,
@@ -263,10 +266,9 @@ function Header({ children }) {
         }}
       >
         <Grid container spacing={3} alignItems="center">
-          {/* Search */}
+         
         </Grid>
-        {children}
-      </Card>
+      </Card> */}
     </MDBox>
   );
 }
