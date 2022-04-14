@@ -255,8 +255,7 @@ function Header({ children }) {
           </Grid>
         </Grid>
       </MDBox>
-      <TicketInformation></TicketInformation>
-      {/* <Card
+      <Card
         sx={{
           position: "relative",
           mt: -8,
@@ -265,10 +264,9 @@ function Header({ children }) {
           px: 2,
         }}
       >
-        <Grid container spacing={3} alignItems="center">
-         
-        </Grid>
-      </Card> */}
+        <Grid container spacing={3} alignItems="center"></Grid>
+        <TicketInformation></TicketInformation>
+      </Card>
     </MDBox>
   );
 }

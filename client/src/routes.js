@@ -43,7 +43,8 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import Profile2 from 'layouts/profile2'
+import Profile2 from "layouts/profile2";
+import Booking from "layouts/booking";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -62,7 +63,7 @@ const routes = [
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
-    component: <Tables />,
+    component: <Booking />,
   },
   {
     type: "collapse",

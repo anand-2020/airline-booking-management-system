@@ -16,33 +16,105 @@ Coded by www.creative-tim.com
 // @mui material components
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
+import React from "react";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import { Divider, Tab, Tabs, Box, ButtonGroup, Button } from "@mui/material";
 
 // Billing page components
 import Ticket from "layouts/tickets/components/Ticket";
 
 function TicketInformation() {
+  const [value, setValue] = React.useState(0);
+  const [activeDate, setActiveDate] = React.useState(0);
+
+  const handleDateButtonClick = (idx) => {
+    setActiveDate(idx);
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const dates = [
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+    "19/02/2022",
+  ];
+
   return (
-    <Card id="delete-account">
-      <MDBox pt={3} px={2}>
-        <Stack direction="row" spacing="auto" textAlign="center">
-          <MDButton variant="contained" color="secondary" size="medium">
-            14/04/2022
-          </MDButton>
-          <MDButton variant="contained" color="secondary" size="medium">
-            15/04/2022
-          </MDButton>
-          <MDButton variant="contained" color="secondary" size="medium">
-            16/04/2022
-          </MDButton>
-          <MDButton variant="contained" color="secondary" size="medium">
-            17/04/2022
-          </MDButton>
-        </Stack>
+    // <Card id="delete-account">
+    <>
+      <MDBox
+        pt={3}
+        px={2}
+        sx={{ overflowX: "scroll" }}
+        // sx={{ maxWidth: "50vw", bgcolor: "white" }}
+      >
+        {/* <Tabs
+          value={value}
+          onChange={handleChange}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+        >
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+          <MDBox sx={{ minWidth: "180px" }}>
+            <Tab wrapped label="22/01/2022" />
+            <Divider orientation="vertical" />
+          </MDBox>
+        </Tabs> */}
+
+        <ButtonGroup>
+          {dates.map((date, idx) => (
+            <Button
+              key={idx}
+              variant={idx === activeDate ? "contained" : "text"}
+              onClick={() => handleDateButtonClick(idx)}
+            >
+              <MDTypography
+                opacity="10"
+                variant="h6"
+                color={idx === activeDate ? "white" : "dark"}
+              >
+                {date}
+              </MDTypography>
+            </Button>
+          ))}
+        </ButtonGroup>
       </MDBox>
       <MDBox pt={1} pb={2} px={2}>
         <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
@@ -79,7 +151,8 @@ function TicketInformation() {
           />
         </MDBox>
       </MDBox>
-    </Card>
+    </>
+    // </Card>
   );
 }
 
