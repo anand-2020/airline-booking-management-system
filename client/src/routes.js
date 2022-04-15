@@ -40,10 +40,10 @@ import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Billing from "layouts/billing";
 import Notifications from "layouts/notifications";
-import Profile from "layouts/profile";
+import Profile from "layouts/userProfile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import Profile2 from 'layouts/profile2'
+import Profile2 from "layouts/profile2";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
