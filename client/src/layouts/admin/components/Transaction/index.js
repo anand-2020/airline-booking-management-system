@@ -29,6 +29,10 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
 
+import Dialog from "layouts/dialog";
+import FlightDays from "layouts/form/flightDays";
+import LeaseDate from "layouts/form/leaseDate";
+
 function Transaction({ color, icon, flightID, description, value }) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -126,15 +130,22 @@ function Transaction({ color, icon, flightID, description, value }) {
           13/10/2030
         </MDTypography>
         &nbsp;
-        <IconButton
-          variant="outlined"
-          color={color}
-          iconOnly
-          circular
-          size="small"
+        <Dialog
+          title="Edit Lease Date"
+          action={
+            <IconButton
+              variant="outlined"
+              color={color}
+              iconOnly
+              circular
+              size="small"
+            >
+              <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+            </IconButton>
+          }
         >
-          <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
-        </IconButton>
+          <LeaseDate />
+        </Dialog>
       </Grid>
       <Grid
         item
@@ -202,16 +213,22 @@ function Transaction({ color, icon, flightID, description, value }) {
             <Chip label="T" color="secondary" variant="filled" size="small" />
             <Chip label="F" color="secondary" variant="outlined" size="small" />
             <Chip label="S" color="secondary" variant="outlined" size="small" />
-
-            <IconButton
-              variant="outlined"
-              color={color}
-              iconOnly
-              circular
-              size="small"
+            <Dialog
+              title="Edit Flight Days"
+              action={
+                <IconButton
+                  variant="outlined"
+                  color={color}
+                  iconOnly
+                  circular
+                  size="small"
+                >
+                  <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+                </IconButton>
+              }
             >
-              <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
-            </IconButton>
+              <FlightDays />
+            </Dialog>
           </Stack>
         </Grid>
         <Grid

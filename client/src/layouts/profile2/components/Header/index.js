@@ -52,7 +52,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 function Header({ children }) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
-  const [dateValue, setDateValue] = useState(new Date("2022-04-15"));
+  const [dateValue, setDateValue] = useState(new Date());
 
   const handleDateChange = (newDate) => {
     setDateValue(newDate);
@@ -311,7 +311,7 @@ function Header({ children }) {
                           textAlign: "center",
                         },
                       }}
-                      minDate={new Date("2022-04-15")}
+                      minDate={new Date()}
                       // defaultValue={dateValue}
                       renderInput={(params) => <MDInput {...params} />}
                     />

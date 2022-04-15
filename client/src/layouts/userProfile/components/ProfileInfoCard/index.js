@@ -22,7 +22,6 @@ import PropTypes from "prop-types";
 // @mui material components
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
@@ -37,11 +36,16 @@ import FemaleIcon from "@mui/icons-material/Female";
 import TransgenderIcon from "@mui/icons-material/Transgender";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import HomeIcon from "@mui/icons-material/Home";
+import EditIcon from "@mui/icons-material/Edit";
 
 // Material Dashboard 2 React components
 import MDAvatar from "components/MDAvatar";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+
+import Dialog from "layouts/dialog";
+import UserInfo from "layouts/form/userInfo";
 
 function ProfileInfoCard({
   customerId,
@@ -82,7 +86,7 @@ function ProfileInfoCard({
 
       <Grid
         container
-        //direction="column"
+        direction={{ xs: "column", sm: "row" }}
         display="flex"
         xs={12}
         alignItems="flex-start"
@@ -161,6 +165,26 @@ function ProfileInfoCard({
             </ListItem>
           </List>
         </Grid>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        display="flex"
+        justifyContent="flex-end"
+        alignItems="flex-end"
+        sx={{ mt: 3 }}
+      >
+        <Dialog
+          title="Edit Personal Information"
+          action={
+            <MDButton variant="outlined" color="info">
+              <EditIcon />
+              &nbsp;Edit
+            </MDButton>
+          }
+        >
+          <UserInfo />
+        </Dialog>
       </Grid>
 
       {/* <Grid container display="flex" xs={12} alignItems="flex-start">

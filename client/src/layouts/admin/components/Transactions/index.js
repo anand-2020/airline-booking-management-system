@@ -32,6 +32,8 @@ import { CardHeader, IconButton, Divider } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import MDButton from "components/MDButton";
 import React, { useState } from "react";
+import FlightPath from "layouts/form/flightPath";
+import Dialog from "layouts/dialog";
 
 function Transactions() {
   const [currPage, setCurrPage] = useState(1);
@@ -81,10 +83,17 @@ function Transactions() {
         pt={3}
         px={2}
       >
-        <MDButton variant="outlined" color="success">
-          <Add />
-          &nbsp;Add a new Flight Path
-        </MDButton>
+        <Dialog
+          title="Add New Flight Path"
+          action={
+            <MDButton variant="outlined" color="success">
+              <Add />
+              &nbsp;Add a new Flight Path
+            </MDButton>
+          }
+        >
+          <FlightPath />
+        </Dialog>
       </MDBox>
       <Divider />
       <MDBox display="flex" justifyContent="center" alignItems="center">
