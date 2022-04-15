@@ -45,8 +45,11 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import Profile2 from "layouts/profile2";
 import Booking from "layouts/booking";
+import UserTickets from "layouts/userTickets";
 // @mui icons
 import Icon from "@mui/material/Icon";
+import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import FlightLandIcon from "@mui/icons-material/FlightLand";
 
 const routes = [
   {
@@ -88,6 +91,22 @@ const routes = [
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <Profile />,
+  },
+  {
+    type: "collapse",
+    name: "Upcoming Journeys",
+    key: "upcoming-journeys",
+    icon: <FlightTakeoffIcon fontSize="small" />,
+    route: "/upcoming-journeys",
+    component: <UserTickets isUpcoming={true} />,
+  },
+  {
+    type: "collapse",
+    name: "Archive ",
+    key: "archive",
+    icon: <FlightLandIcon fontSize="small" />,
+    route: "/archive",
+    component: <UserTickets isUpcoming={false} />,
   },
   {
     type: "collapse",
