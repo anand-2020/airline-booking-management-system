@@ -27,6 +27,8 @@ import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
+import Grid from "@mui/material/Grid";
+import { Divider } from "@mui/material";
 
 function Ticket({
   srcId,
@@ -44,18 +46,32 @@ function Ticket({
 
   return (
     <MDBox
-      component="li"
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
       bgColor={darkMode ? "transparent" : "grey-200"}
       borderRadius="lg"
       p={3}
       mb={noGutter ? 0 : 1}
       mt={2}
     >
-      <MDBox display="flex" alignItems="center">
-        <Stack spacing={0} textAlign="center">
+      <Grid
+        container
+        // component="li"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+        // mx="auto"
+      >
+        <Grid
+          item
+          lg={2}
+          sm={3}
+          xs={7}
+          display="flex"
+          alignItems="center"
+          flexDirection={"column"}
+        >
+          {/* <MDBox borderColor={"black"} border={"2px"}> */}
+          {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
           <MDTypography variant="h4" fontWeight="bold">
             {departure}
@@ -63,27 +79,39 @@ function Ticket({
           <MDTypography variant="h6" fontWeight="light">
             {srcCity}
           </MDTypography>
-        </Stack>
-      </MDBox>
+          {/* </Stack> */}
+          {/* </MDBox> */}
+        </Grid>
 
-      <MDBox display="flex" alignItems="center">
-        <Stack spacing={0} textAlign="center">
-          <MDTypography variant="h6" fontWeight="light">
-            {duration}
-          </MDTypography>
-          <hr
-            style={{
-              color: "black",
-              backgroundColor: "black",
-              borderWidth: 0,
-              height: 3,
-            }}
-          />
-        </Stack>
-      </MDBox>
+        <Grid
+          item
+          lg={2}
+          sm={3}
+          xs={7}
+          display="flex"
+          alignItems="center"
+          flexDirection={"column"}
+          justifyContent={"center"}
+        >
+          {/* <Stack spacing={0} textAlign="center"> */}
+          <Divider flexItem>
+            <MDTypography variant="h6" fontWeight="medium">
+              {duration}
+            </MDTypography>
+          </Divider>
+          {/* </Stack> */}
+        </Grid>
 
-      <MDBox display="flex" alignItems="center">
-        <Stack spacing={0} textAlign="center">
+        <Grid
+          item
+          lg={2}
+          sm={3}
+          xs={7}
+          display="flex"
+          alignItems="center"
+          flexDirection={"column"}
+        >
+          {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{destId}</MDTypography>
           <MDTypography variant="h4" fontWeight="bold">
             {arrival}
@@ -91,18 +119,35 @@ function Ticket({
           <MDTypography variant="h6" fontWeight="light">
             {destCity}
           </MDTypography>
-        </Stack>
-      </MDBox>
+          {/* </Stack> */}
+        </Grid>
 
-      <MDBox display="flex" alignItems="center">
-        <MDTypography fontWeight="bold">&#8377;{fare}</MDTypography>
-      </MDBox>
+        <Grid
+          item
+          lg={2}
+          sm={3}
+          xs={7}
+          display="flex"
+          alignItems="center"
+          flexDirection={"column"}
+        >
+          <MDTypography fontWeight="bold">&#8377;{fare}</MDTypography>
+        </Grid>
 
-      <MDBox display="flex" alignItems="center">
-        <MDButton variant="contained" color="primary" size="large">
-          <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
-        </MDButton>
-      </MDBox>
+        <Grid
+          item
+          lg={2}
+          sm={3}
+          xs={7}
+          display="flex"
+          alignItems="center"
+          flexDirection={"column"}
+        >
+          <MDButton variant="contained" color="primary" size="large">
+            <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
+          </MDButton>
+        </Grid>
+      </Grid>
     </MDBox>
   );
 }
