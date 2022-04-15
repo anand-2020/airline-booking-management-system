@@ -45,6 +45,7 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import Profile2 from "layouts/profile2";
 import Booking from "layouts/booking";
+import Admin from "layouts/admin";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -71,7 +72,7 @@ const routes = [
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
-    component: <Billing />,
+    component: <Admin />,
   },
   {
     type: "collapse",

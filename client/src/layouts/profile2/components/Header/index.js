@@ -47,18 +47,65 @@ import backgroundImage from "assets/images/bg-profile.jpeg";
 import MDButton from "components/MDButton";
 
 import TicketInformation from "../../../tickets/components/TicketInformation";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function Header({ children }) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
-  const [dateValue, setDateValue] = useState(new Date("2014-08-18"));
+  const [dateValue, setDateValue] = useState(new Date("2022-04-15"));
 
   const handleDateChange = (newDate) => {
     setDateValue(newDate);
   };
+  const cities = [
+    {
+      AIRPORT_ID: 1,
+      AIRPORT_NAME: "AIRPORTX",
+      CITY: "DELHI",
+      COUNTRY: "INDIA",
+    },
+    {
+      AIRPORT_ID: 2,
+      AIRPORT_NAME: "AIRPORTY",
+      CITY: "NAGPUR",
+      COUNTRY: "INDIA",
+    },
+    {
+      AIRPORT_ID: 3,
+      AIRPORT_NAME: "AIRPORTZ",
+      CITY: "KOLKATA",
+      COUNTRY: "INDIA",
+    },
+    {
+      AIRPORT_ID: 4,
+      AIRPORT_NAME: "AIRPORTA",
+      CITY: "NEW YORK",
+      COUNTRY: "USA",
+    },
+    {
+      AIRPORT_ID: 5,
+      AIRPORT_NAME: "AIRPORTB",
+      CITY: "LONDON",
+      COUNTRY: "ENGLAND",
+    },
+    {
+      AIRPORT_ID: 6,
+      AIRPORT_NAME: "AIRPORTC",
+      CITY: "DUBLIN",
+      COUNTRY: "IRELAND",
+    },
+  ];
 
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
+    // var today = new Date();
+    // var dd = String(today.getDate()).padStart(2, "0");
+    // var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    // var yyyy = today.getFullYear();
+
+    // today = dd + "/" + mm + "/" + yyyy;
+    // setDateValue(today);
+
     function handleTabsOrientation() {
       return window.innerWidth < breakpoints.values.sm
         ? setTabsOrientation("vertical")
@@ -119,8 +166,14 @@ function Header({ children }) {
             marginX={1}
             paddingX={3}
           >
-            <Grid item lg={4} sm={5} xs={4}>
-              <MDBox height="100%" mt={0.5} lineHeight={1} width="auto">
+            <Grid item lg={4} sm={5} xs={12}>
+              <MDBox
+                height="100%"
+                mt={{ sm: 0.5, xs: 3 }}
+                mx={"auto"}
+                lineHeight={1}
+                width="auto"
+              >
                 {/* <MDTypography
                   variant="h1"
                   fontWeight={"bold"}
@@ -128,7 +181,30 @@ function Header({ children }) {
                   display={"flex"}
                 > */}
                 {/* <FlightTakeOff sx={{ mt: 1, mx: 0.5 }} /> */}
-                <MDInput
+                <Autocomplete
+                  options={cities}
+                  groupBy={(option) => option.COUNTRY}
+                  getOptionLabel={(option) => option.CITY}
+                  sx={{
+                    "& .MuiAutocomplete-input": {
+                      fontSize: 20,
+                      color: "#ffffff",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      borderWidth: 5,
+                    },
+                  }}
+                  // placeholder="SRC."
+                  // inputProps={{
+                  //   style: {
+
+                  //   },
+                  // }}
+                  renderInput={(params) => (
+                    <MDInput {...params} placeholder="SRC." />
+                  )}
+                />
+                {/* <MDInput
                   width="auto"
                   inputProps={{
                     style: {
@@ -139,8 +215,8 @@ function Header({ children }) {
                     },
                   }}
                   type="search"
-                  placeholder="SRC."
-                ></MDInput>
+                  
+                ></MDInput> */}
                 {/* </MDTypography> */}
               </MDBox>
             </Grid>
@@ -158,14 +234,14 @@ function Header({ children }) {
                 sx={{
                   mt: 1,
                   mx: 0.5,
-                  transform: "rotate(90deg)",
+                  transform: { xs: "rotate(180deg)", sm: "rotate(90deg)" },
                 }}
               />
             </MDTypography>
             {/* </MDBox>
             </Grid> */}
 
-            <Grid item lg={4} sm={5} xs={4}>
+            <Grid item lg={4} sm={5} xs={12}>
               <MDBox height="100%" mt={0.5} lineHeight={1}>
                 {/* <MDTypography
                   variant="h1"
@@ -174,19 +250,29 @@ function Header({ children }) {
                   display={"flex"}
                 > */}
                 {/* <FlightLand sx={{ mt: 1, mx: 0.5 }} /> */}
-                <MDInput
-                  width="auto"
-                  inputProps={{
-                    style: {
-                      fontSize: 30,
-                      color: "white",
+                <Autocomplete
+                  options={cities}
+                  groupBy={(option) => option.COUNTRY}
+                  getOptionLabel={(option) => option.CITY}
+                  sx={{
+                    "& .MuiAutocomplete-input": {
+                      fontSize: 20,
+                      color: "#ffffff",
                       fontWeight: "bold",
                       textAlign: "center",
+                      borderWidth: 5,
                     },
                   }}
-                  type="search"
-                  placeholder="DEST."
-                ></MDInput>
+                  // placeholder="SRC."
+                  // inputProps={{
+                  //   style: {
+
+                  //   },
+                  // }}
+                  renderInput={(params) => (
+                    <MDInput {...params} placeholder="DEST." />
+                  )}
+                />
                 {/* </MDTypography> */}
               </MDBox>
             </Grid>
@@ -214,17 +300,19 @@ function Header({ children }) {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       // label="Date of Journey"
-                      inputFormat="dd/mm/yyyy"
+                      inputFormat="dd/MM/yyyy"
                       value={dateValue}
                       onChange={handleDateChange}
                       inputProps={{
                         style: {
-                          fontSize: 30,
+                          fontSize: 20,
                           color: "white",
                           fontWeight: "bold",
                           textAlign: "center",
                         },
                       }}
+                      minDate={new Date("2022-04-15")}
+                      // defaultValue={dateValue}
                       renderInput={(params) => <MDInput {...params} />}
                     />
                   </LocalizationProvider>
@@ -258,8 +346,8 @@ function Header({ children }) {
       <Card
         sx={{
           position: "relative",
-          mt: -8,
-          mx: 3,
+          mt: { xs: 0, sm: -8 },
+          mx: { xs: 0, sm: 3 },
           py: 2,
           px: 2,
         }}
