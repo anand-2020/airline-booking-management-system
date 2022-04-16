@@ -109,7 +109,8 @@ function ProfileInfoCard({
               </ListItemIcon>
               <ListItemText sx={{ ml: -3 }}>
                 <MDTypography variant="h6" fontWeight="medium">
-                  {dob}
+                  {/* {dob} */}
+                  {dob.substring(0, 10)}
                 </MDTypography>
               </ListItemText>
             </ListItem>
@@ -139,7 +140,7 @@ function ProfileInfoCard({
               </ListItemIcon>
               <ListItemText sx={{ ml: -3 }}>
                 <MDTypography variant="h6" fontWeight="medium">
-                  (+{countryCode})&nbsp;{phoneNo}
+                  ({countryCode})&nbsp;{phoneNo}
                 </MDTypography>
               </ListItemText>
             </ListItem>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,70 +14,102 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CountryCode from "layouts/form/data/countryCode.js";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Autocomplete from "@mui/material/Autocomplete";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import axios from "axiosInstance";
+import Spinner from "components/Spinner";
+import { getLinearProgressUtilityClass } from "@mui/material";
 
 const theme = createTheme();
 
-export default function FlightPath() {
-  const [weekDays, setWeekDays] = React.useState(() => ["Sun", "Fri"]);
-  const [deptTime, setDeptTime] = React.useState(null);
+export default function FlightPath({ handleClose }) {
+  const [airports, setAirports] = useState([]);
+  const [flightId, setFlightId] = useState("");
+  const [srcId, setSrcId] = useState("");
+  const [destId, setDestId] = useState("");
+  const [deptTime, setDeptTime] = useState(null);
+  const [baseFare, setBaseFare] = useState(null);
+  const [durHour, setDurHour] = useState("");
+  const [durMin, setDurMin] = useState("");
+  const [rows, setRows] = useState(null);
+  const [cols, setCols] = useState(null);
+  const [leaseDate, setLeaseDate] = useState(null);
+  const [weekDays, setWeekDays] = useState(() => []);
+  const [loading, setLoading] = useState(false);
 
   const handleWeekDays = (event, newWeekDays) => {
     setWeekDays(newWeekDays);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const getAirports = () => {
+    axios
+      .get(`airport`)
+      .then((res) => {
+        console.log(res.data.data);
+        setAirports(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const cities = [
-    {
-      AIRPORT_ID: 1,
-      AIRPORT_NAME: "AIRPORTX",
-      CITY: "DELHI",
-      COUNTRY: "INDIA",
-    },
-    {
-      AIRPORT_ID: 2,
-      AIRPORT_NAME: "AIRPORTY",
-      CITY: "NAGPUR",
-      COUNTRY: "INDIA",
-    },
-    {
-      AIRPORT_ID: 3,
-      AIRPORT_NAME: "AIRPORTZ",
-      CITY: "KOLKATA",
-      COUNTRY: "INDIA",
-    },
-    {
-      AIRPORT_ID: 4,
-      AIRPORT_NAME: "AIRPORTA",
-      CITY: "NEW YORK",
-      COUNTRY: "USA",
-    },
-    {
-      AIRPORT_ID: 5,
-      AIRPORT_NAME: "AIRPORTB",
-      CITY: "LONDON",
-      COUNTRY: "ENGLAND",
-    },
-    {
-      AIRPORT_ID: 6,
-      AIRPORT_NAME: "AIRPORTC",
-      CITY: "DUBLIN",
-      COUNTRY: "IRELAND",
-    },
-  ];
+  useEffect(() => {
+    getAirports();
+  }, []);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    let days_string = "";
+    const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    weekNames.forEach((day) => {
+      if (weekDays.includes(day)) days_string += "1";
+      else days_string += "0";
+    });
+
+    const leaseDateString = new Date(
+      new Date(leaseDate).getTime() -
+        new Date(leaseDate).getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .split("T")[0];
+
+    const dt = new Date(deptTime);
+
+    const deptTimeString = `${dt.getUTCHours()}:${dt.getUTCMinutes()}:${dt.getUTCSeconds()}`;
+
+    const data = {
+      FLIGHT_ID: flightId,
+      SRC_ID: srcId,
+      DEST_ID: destId,
+      DEPARTURE_TIME: deptTimeString,
+      DURATION: `${durHour}:${durMin}:00`,
+      NUM_ROWS: rows,
+      NUM_COLS: cols,
+      BASE_FARE: baseFare,
+      LEASE_EXPIRY: leaseDateString,
+      DAYS_STRING: days_string,
+    };
+
+    axios
+      .post(`flight`, data)
+      .then((res) => {
+        console.log(res.data);
+        setLoading(false);
+        handleClose();
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        setLoading(false);
+        handleClose();
+      });
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,12 +123,7 @@ export default function FlightPath() {
             alignItems: "center",
           }}
         >
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid
               container
               spacing={3}
@@ -111,22 +138,17 @@ export default function FlightPath() {
                   fullWidth
                   id="flightID"
                   label="Flight ID"
-                  autoFocus
+                  value={flightId}
+                  onChange={(e) => setFlightId(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Autocomplete
-                  options={cities}
+                  options={airports}
                   groupBy={(option) => option.COUNTRY}
                   getOptionLabel={(option) => option.CITY}
-                  sx={{
-                    "& .MuiAutocomplete-input": {
-                      fontSize: 20,
-                      color: "#ffffff",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      borderWidth: 5,
-                    },
+                  onChange={(event, value) => {
+                    setSrcId(value.AIRPORT_ID);
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -141,17 +163,11 @@ export default function FlightPath() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Autocomplete
-                  options={cities}
+                  options={airports}
                   groupBy={(option) => option.COUNTRY}
                   getOptionLabel={(option) => option.CITY}
-                  sx={{
-                    "& .MuiAutocomplete-input": {
-                      fontSize: 20,
-                      color: "#ffffff",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      borderWidth: 5,
-                    },
+                  onChange={(event, value) => {
+                    setDestId(value.AIRPORT_ID);
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -192,6 +208,8 @@ export default function FlightPath() {
                   id="baseFare"
                   label="Base Fare"
                   type="number"
+                  value={baseFare}
+                  onChange={(e) => setBaseFare(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sx={{ mb: -1.8 }}>
@@ -205,6 +223,8 @@ export default function FlightPath() {
                   id="hour"
                   label="Hour"
                   type="number"
+                  value={durHour}
+                  onChange={(e) => setDurHour(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -215,6 +235,8 @@ export default function FlightPath() {
                   id="minutes"
                   label="Minutes"
                   type="number"
+                  value={durMin}
+                  onChange={(e) => setDurMin(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sx={{ mb: -1.8 }}>
@@ -228,6 +250,8 @@ export default function FlightPath() {
                   id="rows"
                   label="Rows"
                   type="number"
+                  value={rows}
+                  onChange={(e) => setRows(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -238,6 +262,8 @@ export default function FlightPath() {
                   id="columns"
                   label="Columns"
                   type="number"
+                  value={cols}
+                  onChange={(e) => setCols(e.target.value)}
                 />
               </Grid>
 
@@ -308,15 +334,37 @@ export default function FlightPath() {
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Grid>
+              <Grid item xs={12}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    inputFormat="dd/MM/yyyy"
+                    value={leaseDate}
+                    onChange={(newDate) => setLeaseDate(newDate)}
+                    minDate={new Date()}
+                    label="Lease Date"
+                    id="dob"
+                    name="dob"
+                    fullWidth
+                    renderInput={(params) => (
+                      <TextField fullWidth required {...params} />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              ADD FLIGHT
-            </Button>
+            {loading === true ? (
+              <Spinner />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                // onClick={handleSubmit}
+              >
+                ADD FLIGHT
+              </Button>
+            )}
           </Box>
         </Box>
       </Container>

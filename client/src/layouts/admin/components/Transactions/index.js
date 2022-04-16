@@ -33,6 +33,7 @@ import { Search, Add } from "@mui/icons-material";
 import MDButton from "components/MDButton";
 import React, { useState } from "react";
 import FlightPath from "layouts/form/flightPath";
+import Airport from "layouts/form/airport";
 import Dialog from "layouts/dialog";
 
 function Transactions() {
@@ -92,7 +93,20 @@ function Transactions() {
             </MDButton>
           }
         >
+          {" "}
           <FlightPath />
+        </Dialog>
+        &nbsp; &nbsp;
+        <Dialog
+          title="Add New Airport"
+          action={
+            <MDButton variant="outlined" color="success">
+              <Add />
+              &nbsp;Add a new Airport
+            </MDButton>
+          }
+        >
+          <Airport />
         </Dialog>
       </MDBox>
       <Divider />

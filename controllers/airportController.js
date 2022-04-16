@@ -3,7 +3,7 @@ import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 
 export const getAllAirports = catchAsync(async (req, res, next) => {
-  const query = `SELECT * FROM AIRPORT `;
+  const query = `SELECT * FROM AIRPORT ORDER BY COUNTRY`;
   const airports = await db.executeQuery(query);
 
   res.status(200).json({

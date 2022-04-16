@@ -36,6 +36,7 @@ const getCustomer = catchAsync(async (req, res, next) => {
 });
 
 const updateCustomer = catchAsync(async (req, res, next) => {
+  console.log("updt customer");
   let query = `UPDATE CUSTOMERS SET `;
 
   if (req.body.CUSTOMER_NAME) {
@@ -48,7 +49,10 @@ const updateCustomer = catchAsync(async (req, res, next) => {
     query += ` GENDER = '${req.body.GENDER}',`;
   }
   if (req.body.DOB) {
-    query += ` DOB = '${req.body.DOB}',`;
+    query += ` DOB = STR_TO_DATE('${req.body.DOB.substring(
+      0,
+      10
+    )}', '%Y-%m-%d'),`;
   }
   if (req.body.PROFESSION) {
     query += ` PROFESSION = '${req.body.PROFESSION}',`;
@@ -65,10 +69,12 @@ const updateCustomer = catchAsync(async (req, res, next) => {
 
   query = query.substring(0, query.length - 1);
 
-  query += " WHERE CUSTOMER_ID = ?";
+  query += ` WHERE CUSTOMER_ID = '${req.params.id}'`;
 
-  await db.executeQuery(query, req.params.id);
+  console.log(query);
+  await db.executeQuery(query);
 
+  console.log("executed");
   res.status(200).json({
     status: "success",
   });

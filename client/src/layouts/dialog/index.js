@@ -25,6 +25,13 @@ export default function FormDialog({ title, action, children }) {
     setOpen(false);
   };
 
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { handleClose });
+    }
+    return child;
+  });
+
   return (
     <div>
       <MDBox onClick={handleClickOpen}>{action}</MDBox>
@@ -49,7 +56,8 @@ export default function FormDialog({ title, action, children }) {
 
         <DialogContent sx={{ mt: 0 }}>
           {/* <DialogContentText>Some information....</DialogContentText> */}
-          {children}
+          {/* {children} */}
+          {childrenWithProps}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>CANCEL</Button>
