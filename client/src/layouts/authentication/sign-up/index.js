@@ -246,8 +246,8 @@ function Cover() {
                       onChange={handleCountryCodeChange}
                     >
                       {CountryCode.map((option, idx) => (
-                        <option key={idx} value={option.dial_code}>
-                          {option.name}
+                        <option key={idx} value={option.code}>
+                          {option.name + " (" + option.dial_code + ")"}
                         </option>
                       ))}
                     </MDInput>
