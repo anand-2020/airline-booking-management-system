@@ -12,6 +12,7 @@ import authRouter from "./routes/authRouter.js";
 import customerRouter from "./routes/customerRouter.js";
 import ticketRouter from "./routes/ticketRouter.js";
 import flightRouter from "./routes/flightRouter.js";
+import airportRouter from "./routes/airportRouter.js";
 
 //ROUTERS
 
@@ -42,6 +43,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/customer", customerRouter);
 app.use("/api/ticket", ticketRouter);
 app.use("/api/flight", flightRouter);
+app.use("/api/airport", airportRouter);
 
 //client/build
 if (NODE_ENV === "production") {

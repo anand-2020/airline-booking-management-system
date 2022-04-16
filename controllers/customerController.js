@@ -11,7 +11,7 @@ const getAllCustomer = catchAsync(async (req, res, next) => {
   });
   res.status(200).json({
     status: "success",
-    customers,
+    data: customers.data,
   });
 });
 
@@ -31,20 +31,75 @@ const getCustomer = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    customer,
+    data: customer.data,
   });
 });
 
-// TODO : testing
-const getCustomerTickets = catchAsync(async (req, res, next) => {
-  const query = `SELECT * FROM TICKET WHERE CUSTOMER_ID = ? ORDER BY TIME_OF_BOOKING DESC`;
+const updateCustomer = catchAsync(async (req, res, next) => {
+  let query = `UPDATE CUSTOMERS SET `;
 
-  const tickets = await db.executeQuery(query, req.params.id);
+  if (req.body.CUSTOMER_NAME) {
+    query += ` CUSTOMER_NAME = '${req.body.CUSTOMER_NAME}',`;
+  }
+  if (req.body.EMAIL_ID) {
+    query += ` EMAIL_ID = '${req.body.EMAIL_ID}',`;
+  }
+  if (req.body.GENDER) {
+    query += ` GENDER = '${req.body.GENDER}',`;
+  }
+  if (req.body.DOB) {
+    query += ` DOB = '${req.body.DOB}',`;
+  }
+  if (req.body.PROFESSION) {
+    query += ` PROFESSION = '${req.body.PROFESSION}',`;
+  }
+  if (req.body.COUNTRY_CODE) {
+    query += ` COUNTRY_CODE = '${req.body.COUNTRY_CODE}',`;
+  }
+  if (req.body.PHONE_NO) {
+    query += ` PHONE_NO = '${req.body.PHONE_NO}',`;
+  }
+  if (req.body.ADDRESS) {
+    query += ` ADDRESS = '${req.body.ADDRESS}',`;
+  }
+
+  query = query.substring(0, query.length - 1);
+
+  query += " WHERE CUSTOMER_ID = ?";
+
+  await db.executeQuery(query, req.params.id);
 
   res.status(200).json({
     status: "success",
-    tickets,
   });
 });
 
-export { getAllCustomer, getCustomer, getCustomerTickets };
+const getCustomerUpcomingTickets = catchAsync(async (req, res, next) => {
+  const resp = await db.executeQuery(
+    `CALL SHOW_TICKETS_BY_CUSTOMER_ID('${req.params.id}', 1)`
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: resp.data[0],
+  });
+});
+
+const getCustomerArchiveTickets = catchAsync(async (req, res, next) => {
+  const resp = await db.executeQuery(
+    `CALL SHOW_TICKETS_BY_CUSTOMER_ID('${req.params.id}', 0)`
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: resp.data[0],
+  });
+});
+
+export {
+  getAllCustomer,
+  getCustomer,
+  updateCustomer,
+  getCustomerUpcomingTickets,
+  getCustomerArchiveTickets,
+};
