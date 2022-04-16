@@ -29,7 +29,7 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Icon from "@mui/material/Icon";
-import { InputAdornment } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -41,6 +41,7 @@ import MDInput from "components/MDInput";
 
 // Material Dashboard 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
+import moment from "moment";
 
 // Images
 import backgroundImage from "assets/images/bg-profile.jpeg";
@@ -48,83 +49,39 @@ import MDButton from "components/MDButton";
 
 import TicketInformation from "../../../tickets/components/TicketInformation";
 import Autocomplete from "@mui/material/Autocomplete";
+import Spinner from "components/Spinner";
+import axios from "axiosInstance";
 
-function Header({ children }) {
-  const [tabsOrientation, setTabsOrientation] = useState("horizontal");
-  const [tabValue, setTabValue] = useState(0);
+function Header({ children, airports }) {
   const [dateValue, setDateValue] = useState(new Date());
+  const [source, setSource] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [flights, setFlights] = useState([]);
 
   const handleDateChange = (newDate) => {
     setDateValue(newDate);
   };
-  const cities = [
-    {
-      AIRPORT_ID: 1,
-      AIRPORT_NAME: "AIRPORTX",
-      CITY: "DELHI",
-      COUNTRY: "INDIA",
-    },
-    {
-      AIRPORT_ID: 2,
-      AIRPORT_NAME: "AIRPORTY",
-      CITY: "NAGPUR",
-      COUNTRY: "INDIA",
-    },
-    {
-      AIRPORT_ID: 3,
-      AIRPORT_NAME: "AIRPORTZ",
-      CITY: "KOLKATA",
-      COUNTRY: "INDIA",
-    },
-    {
-      AIRPORT_ID: 4,
-      AIRPORT_NAME: "AIRPORTA",
-      CITY: "NEW YORK",
-      COUNTRY: "USA",
-    },
-    {
-      AIRPORT_ID: 5,
-      AIRPORT_NAME: "AIRPORTB",
-      CITY: "LONDON",
-      COUNTRY: "ENGLAND",
-    },
-    {
-      AIRPORT_ID: 6,
-      AIRPORT_NAME: "AIRPORTC",
-      CITY: "DUBLIN",
-      COUNTRY: "IRELAND",
-    },
-  ];
 
-  useEffect(() => {
-    // A function that sets the orientation state of the tabs.
-    // var today = new Date();
-    // var dd = String(today.getDate()).padStart(2, "0");
-    // var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    // var yyyy = today.getFullYear();
-
-    // today = dd + "/" + mm + "/" + yyyy;
-    // setDateValue(today);
-
-    function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.sm
-        ? setTabsOrientation("vertical")
-        : setTabsOrientation("horizontal");
-    }
-
-    /** 
-     The event listener that's calling the handleTabsOrientation function when resizing the window.
-    */
-    window.addEventListener("resize", handleTabsOrientation);
-
-    // Call the handleTabsOrientation function to set the state with the initial value.
-    handleTabsOrientation();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleTabsOrientation);
-  }, [tabsOrientation]);
-
-  const handleSetTabValue = (event, newValue) => setTabValue(newValue);
+  const handleSearch = () => {
+    // console.log(moment(dateValue).format());
+    setLoading(true);
+    axios
+      .get(
+        `flight/${source.AIRPORT_ID}/${destination.AIRPORT_ID}/${moment(
+          dateValue
+        ).format()}`
+      )
+      .then((res) => {
+        setFlights(res.data.data);
+        setLoading(false);
+        console.log(res);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
 
   return (
     <MDBox position="relative" mb={5}>
@@ -182,7 +139,7 @@ function Header({ children }) {
                 > */}
                 {/* <FlightTakeOff sx={{ mt: 1, mx: 0.5 }} /> */}
                 <Autocomplete
-                  options={cities}
+                  options={airports}
                   groupBy={(option) => option.COUNTRY}
                   getOptionLabel={(option) => option.CITY}
                   sx={{
@@ -194,12 +151,14 @@ function Header({ children }) {
                       borderWidth: 5,
                     },
                   }}
+                  value={source}
                   // placeholder="SRC."
                   // inputProps={{
                   //   style: {
 
                   //   },
                   // }}
+                  onChange={(e, value) => setSource(value)}
                   renderInput={(params) => (
                     <MDInput {...params} placeholder="SRC." />
                   )}
@@ -251,7 +210,7 @@ function Header({ children }) {
                 > */}
                 {/* <FlightLand sx={{ mt: 1, mx: 0.5 }} /> */}
                 <Autocomplete
-                  options={cities}
+                  options={airports}
                   groupBy={(option) => option.COUNTRY}
                   getOptionLabel={(option) => option.CITY}
                   sx={{
@@ -263,12 +222,14 @@ function Header({ children }) {
                       borderWidth: 5,
                     },
                   }}
+                  value={destination}
                   // placeholder="SRC."
                   // inputProps={{
                   //   style: {
 
                   //   },
                   // }}
+                  onChange={(e, value) => setDestination(value)}
                   renderInput={(params) => (
                     <MDInput {...params} placeholder="DEST." />
                   )}
@@ -313,7 +274,7 @@ function Header({ children }) {
                       }}
                       minDate={new Date()}
                       // defaultValue={dateValue}
-                      renderInput={(params) => <MDInput {...params} />}
+                      renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
                   {/* <MDInput
@@ -335,8 +296,14 @@ function Header({ children }) {
 
             <Grid item lg={3} sm={4} xs={5}>
               <MDBox height="100%" mt={0.5} lineHeight={1}>
-                <MDButton variant="contained" size="large">
-                  SEARCH
+                <MDButton
+                  variant="contained"
+                  size="large"
+                  onClick={handleSearch}
+                  color={loading ? "disabled" : "white"}
+                >
+                  {loading ? <Spinner size={20} /> : "SEARCH"}
+                  {/* SEARCH */}
                 </MDButton>
               </MDBox>
             </Grid>
@@ -353,7 +320,11 @@ function Header({ children }) {
         }}
       >
         <Grid container spacing={3} alignItems="center"></Grid>
-        <TicketInformation></TicketInformation>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <TicketInformation flights={flights}></TicketInformation>
+        )}
       </Card>
     </MDBox>
   );
