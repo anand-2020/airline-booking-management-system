@@ -22,7 +22,7 @@ instance.interceptors.response.use(
     let err = error.response.data.message;
 
     if (err === undefined) err = error.response.data.error.error;
-    window.alert(err);
+    // window.alert(err);
     console.log(error.response);
   }
 );
