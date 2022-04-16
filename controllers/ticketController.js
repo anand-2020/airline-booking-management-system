@@ -3,14 +3,12 @@ import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 
 const bookTicket = catchAsync(async (req, res, next) => {
-  //TODO: write trigger for stopping insertion if flight_status is 'CANCELLED'
-
   let query = `INSERT INTO TICKET 
   (FLIGHT_DATE_ID, CUSTOMER_ID, PASSENGER_NAME, PASSENGER_AGE, TIME_OF_BOOKING, FARE, ROW_NUM, COL_NUM, STATUS) 
   VALUES `;
 
   const dt = new Date().toISOString().slice(0, 19).replace("T", " ");
-  req.body.tickets.forEach((ticket) => {
+  req.body.TICKETS.forEach((ticket) => {
     query += ` ( 
       '${req.body.FLIGHT_DATE_ID}', 
       '${req.body.CUSTOMER_ID}', 
@@ -47,24 +45,36 @@ const getTicket = catchAsync(async (req, res, next) => {
 });
 
 const cancelTicket = catchAsync(async (req, res, next) => {
-  const dt = new Date();
-  const query = `UPDATE TICKET SET status = 'CANCELLED', TIME_OF_CANCELLATION = ? WHERE TICKET_ID = ?`;
+  const dt = new Date().toISOString().slice(0, 19).replace("T", " ");
+  const query = `CALL CANCEL_TICKET(${req.params.ticketId}, '${dt}')`;
+  console.log(query);
+  const resp = await db.executeQuery(query);
 
-  const cancelledTicket = await db.executeQuery(query, [
-    dt,
-    req.params.ticketId,
-  ]);
-
-  if (cancelledTicket.data.affectedRows === 0) {
-    return next(
-      new AppError(`No ticket found with ID ${req.params.ticketId}`, 404)
-    );
-  }
-
+  console.log(resp);
   res.status(200).json({
     status: "success",
   });
 });
+
+// const cancelTicket = catchAsync(async (req, res, next) => {
+//   const dt = new Date();
+//   const query = `UPDATE TICKET SET status = 'CANCELLED', TIME_OF_CANCELLATION = ? WHERE TICKET_ID = ?`;
+
+//   const cancelledTicket = await db.executeQuery(query, [
+//     dt,
+//     req.params.ticketId,
+//   ]);
+
+//   if (cancelledTicket.data.affectedRows === 0) {
+//     return next(
+//       new AppError(`No ticket found with ID ${req.params.ticketId}`, 404)
+//     );
+//   }
+
+//   res.status(200).json({
+//     status: "success",
+//   });
+// });
 
 // const bookedTicketsForFlight = catchAsync(async (req, res, next) => {
 //   const params = [req.params.flightId, req.params.dateOfDeparture];

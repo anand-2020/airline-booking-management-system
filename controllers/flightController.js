@@ -3,62 +3,113 @@ import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 
 export const getAllFlights = catchAsync(async (req, res, next) => {
-  const query = `SELECT * FROM FLIGHT_PATH ORDER BY FLIGHT_ID DESC `;
-  const flights = await db.executeQuery(query);
-  flights.data.forEach((flight) => (flight = { ...flight, DAYS_OF_WEEK: [] }));
-
-  const daysOfWeek = await db.executeQuery(
-    `SELECT * FROM FLIGHT_DAY ORDER BY FLIGHT_ID DESC`
-  );
-  const dayFlightMap = new Map();
-  flights.data.forEach((flight) => dayFlightMap.set(flight.FLIGHT_ID, []));
-
-  daysOfWeek.data.forEach((el) =>
-    dayFlightMap.set(el.FLIGHT_ID, [
-      ...dayFlightMap.get(el.FLIGHT_ID),
-      el.DAY_OF_WEEK,
-    ])
-  );
-
-  flights.data.forEach(
-    (flight) => (flight.DAYS_OF_WEEK = [...dayFlightMap.get(flight.FLIGHT_ID)])
-  );
+  const resp = await db.executeQuery(`CALL SHOW_FLIGHT_PATH_FOR_ADMIN`);
 
   res.status(200).json({
     status: "success",
-    flights,
+    data: resp.data[0],
+  });
+});
+
+export const getFlightsBetweenAirports = catchAsync(async (req, res, next) => {
+  const cid = "af";
+  if (req.user) {
+    cid = req.user.CUSTOMER_ID;
+  }
+  const query = `CALL SHOW_FLIGHTS(
+    '${cid}', 
+    '${req.params.srcId}', 
+    '${req.params.destId}', 
+    '${req.params.dateOfDeparture}'
+  ) `;
+
+  const resp = await db.executeQuery(query);
+
+  res.status(200).json({
+    status: "success",
+    data: resp.data[0],
   });
 });
 
 export const addFlight = catchAsync(async (req, res, next) => {
-  const {
-    FLIGHT_ID,
-    SOURCE_ID,
-    DESTINATION_ID,
-    DEPARTURE_TIME,
-    DURATION,
-    NUM_ROWS,
-    NUM_COLS,
-    BASE_FARE,
-    CONTINUED_TILL,
-    DAYS_OF_WEEK,
-  } = req.body;
+  const query = `CALL ADD_FLIGHT_PATH_FOR_ADMIN ( 
+    '${req.body.FLIGHT_ID}', 
+    '${req.body.SRC_ID}', 
+    '${req.body.DEST_ID}', 
+    '${req.body.DEPARTURE_TIME}', 
+    '${req.body.DURATION}',  
+    ${req.body.NUM_ROWS}, 
+    ${req.body.NUM_COLS}, 
+    ${req.body.BASE_FARE},
+    '${req.body.LEASE_EXPIRY}', 
+    '${req.body.DAYS_STRING}' ) 
+    `;
 
-  const query = `INSERT INTO FLIGHT_PATH VALUES ('${FLIGHT_ID}',${SOURCE_ID},${DESTINATION_ID},'${DEPARTURE_TIME}','${DURATION}',${NUM_ROWS},${NUM_COLS},${BASE_FARE},'${CONTINUED_TILL}')`;
-
-  await db.executeQuery(query);
-
-  DAYS_OF_WEEK.forEach(
-    async (el) =>
-      await db.executeQuery(
-        `INSERT INTO FLIGHT_DAY VALUES ('${FLIGHT_ID}','${el.toString()}')`
-      )
-  );
+  const resp = await db.executeQuery(query);
 
   res.status(200).json({
     status: "success",
   });
 });
+
+// export const getAllFlights = catchAsync(async (req, res, next) => {
+
+//   const query = `SELECT * FROM FLIGHT_PATH ORDER BY FLIGHT_ID DESC `;
+//   const flights = await db.executeQuery(query);
+//   flights.data.forEach((flight) => (flight = { ...flight, DAYS_OF_WEEK: [] }));
+
+//   const daysOfWeek = await db.executeQuery(
+//     `SELECT * FROM FLIGHT_DAY ORDER BY FLIGHT_ID DESC`
+//   );
+//   const dayFlightMap = new Map();
+//   flights.data.forEach((flight) => dayFlightMap.set(flight.FLIGHT_ID, []));
+
+//   daysOfWeek.data.forEach((el) =>
+//     dayFlightMap.set(el.FLIGHT_ID, [
+//       ...dayFlightMap.get(el.FLIGHT_ID),
+//       el.DAY_OF_WEEK,
+//     ])
+//   );
+
+//   flights.data.forEach(
+//     (flight) => (flight.DAYS_OF_WEEK = [...dayFlightMap.get(flight.FLIGHT_ID)])
+//   );
+
+//   res.status(200).json({
+//     status: "success",
+//     flights,
+//   });
+// });
+
+// export const addFlight = catchAsync(async (req, res, next) => {
+//   const {
+//     FLIGHT_ID,
+//     SOURCE_ID,
+//     DESTINATION_ID,
+//     DEPARTURE_TIME,
+//     DURATION,
+//     NUM_ROWS,
+//     NUM_COLS,
+//     BASE_FARE,
+//     CONTINUED_TILL,
+//     DAYS_OF_WEEK,
+//   } = req.body;
+
+//   const query = `INSERT INTO FLIGHT_PATH VALUES ('${FLIGHT_ID}',${SOURCE_ID},${DESTINATION_ID},'${DEPARTURE_TIME}','${DURATION}',${NUM_ROWS},${NUM_COLS},${BASE_FARE},'${CONTINUED_TILL}')`;
+
+//   await db.executeQuery(query);
+
+//   DAYS_OF_WEEK.forEach(
+//     async (el) =>
+//       await db.executeQuery(
+//         `INSERT INTO FLIGHT_DAY VALUES ('${FLIGHT_ID}','${el.toString()}')`
+//       )
+//   );
+
+//   res.status(200).json({
+//     status: "success",
+//   });
+// });
 
 export const updateFlight = catchAsync(async (req, res, next) => {
   const { flightId } = req.params;
@@ -83,10 +134,10 @@ export const updateFlight = catchAsync(async (req, res, next) => {
       status: "success",
       data: resp.data[0],
     });
-  } else if (req.body.CANCEL_DATE) {
-    func = `CANCEL_FLIGHT_DATE('${flightId}','${req.body.CANCEL_DATE}')`;
+  } else if (req.body.CANCEL === true) {
+    func = `CANCEL_FLIGHT_DATE('${flightId}','${req.body.DEPARTURE_DATE}')`;
     resp = await db.executeQuery(
-      `CALL CANCEL_FLIGHT_DATE('${flightId}','${req.body.CANCEL_DATE}')`
+      `CALL CANCEL_FLIGHT_DATE('${flightId}','${req.body.DEPARTURE_DATE}')`
     );
 
     res.status(200).json({
