@@ -97,3 +97,17 @@ export const updateFlight = catchAsync(async (req, res, next) => {
 
   //   console.log(resp.data[0][func]);
 });
+
+// for seat map
+export const bookedTicketsForFlight = catchAsync(async (req, res, next) => {
+  const query = `SELECT ROW_NUM, COL_NUM FROM TICKET 
+  WHERE FLIGHT_DATE_ID = ? AND STATUS = 'BOOKED'`;
+
+  const bookedSeats = await db.executeQuery(query, req.params.flightDateId);
+  console.log(bookedSeats);
+
+  res.status(200).json({
+    status: "success",
+    data: bookedSeats.data,
+  });
+});
