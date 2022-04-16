@@ -106,7 +106,7 @@ function TicketInformation() {
               onClick={() => handleDateButtonClick(idx)}
             >
               <MDTypography
-                opacity="10"
+                opacity={10}
                 variant="h6"
                 color={idx === activeDate ? "white" : "dark"}
               >

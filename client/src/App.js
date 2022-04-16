@@ -47,21 +47,55 @@ import createCache from "@emotion/cache";
 import routes from "routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import {
+  useMaterialUIController,
+  setMiniSidenav,
+  setOpenConfigurator,
+} from "context";
 
 // Images
 import brandWhite from "assets/images/monke.png";
+import axios from "axiosInstance";
+import AuthContext from "authContext";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
-  const {
-    miniSidenav,
-    direction,
-    layout,
-    sidenavColor,
-  } = controller;
+  const { miniSidenav, direction, layout, sidenavColor } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [canRead, setCanRead] = useState(null);
+  const [canWrite, setCanWrite] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const checkAuthentication = () => {
+    // if (!localStorage.getItem("jwt")) {
+    //   setLoading(false);
+    //   return;
+    // }
+    axios
+      .get("auth/isLoggedIn")
+      .then((res) => {
+        console.log(res.data);
+        // setCurrentUser(res.data.data.user);
+        setAuthenticated(true);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        // console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
+
+  const updateAuthData = (isAuthenticated, user) => {
+    setCurrentUser(user);
+    setAuthenticated(isAuthenticated);
+  };
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -97,19 +131,32 @@ export default function App() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        return (
+          <Route
+            exact
+            path={route.route}
+            element={route.component}
+            key={route.key}
+          />
+        );
       }
 
       return null;
     });
 
-  
-
   return (
-    <ThemeProvider theme={ theme}>
-      <CssBaseline />
-      {layout === "dashboard" && (
-  
+    <AuthContext.Provider
+      value={{
+        authenticated: authenticated,
+        currentUser: currentUser,
+        canRead: canRead,
+        canWrite: canWrite,
+        updateAuthData: updateAuthData,
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {layout === "dashboard" && (
           <Sidenav
             color={sidenavColor}
             brand={brandWhite}
@@ -118,12 +165,12 @@ export default function App() {
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
-            
-      )}
-      <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </ThemeProvider>
+        )}
+        <Routes>
+          {getRoutes(routes)}
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </ThemeProvider>
+    </AuthContext.Provider>
   );
 }

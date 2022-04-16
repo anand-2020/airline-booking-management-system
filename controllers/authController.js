@@ -53,6 +53,7 @@ export const protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
+  // console.log("safsfsa");
   if (!token) {
     return next(new AppError("You are not logged in", 401));
   }
@@ -97,24 +98,25 @@ export const restrictTo = (...roles) => {
 };
 
 export const login = catchAsync(async (req, res, next) => {
+  // console.log("adasdasf");
   const { email, password } = req.body;
 
   // 1) Check if email and password exist
   if (!email || !password) {
-    return next(new AppError("Please provide email and password!", 400));
+    throw next(new AppError("Please provide email and password!", 400));
   }
   // 2) Check if user exists && password is correct
   const user = await db.executeQuery(
-    `SELECT * FROM CUSTOMERS WHERE email='${email}'`
+    `SELECT * FROM CUSTOMERS WHERE EMAIL_ID='${email}'`
   );
   console.log(user);
   //1) find the user
   if (!user.data.length)
-    return new AppError("Your email or password is wrong.", 401);
-
+    throw new AppError("Your email or password is wrong.", 401);
   //2) check if the current password is correct
-  if (!(await bcrypt.compare(password, user.data[0].PASSWORD))) {
-    return new AppError("Your email or password is wrong.", 401);
+  const passValidated = await bcrypt.compare(password, user.data[0].PASSWORD);
+  if (passValidated === false) {
+    throw new AppError("Your email or password is wrong.", 401);
   }
 
   // 3) If everything ok, send token to client
@@ -125,21 +127,27 @@ export const signup = catchAsync(async (req, res, next) => {
   const newCustomer = {
     CUSTOMER_ID: req.body.CUSTOMER_ID,
     CNAME: req.body.CNAME,
-    EMAIL: req.body.EMAIL,
+    EMAIL_ID: req.body.EMAIL_ID,
     PASSWORD: req.body.PASSWORD,
     GENDER: req.body.GENDER,
-    DOB: req.body.DOB,
+    DOB: req.body.DOB.substring(0, 10),
     ROLE: req.body.ROLE,
     PROFESSION: req.body.PROFESSION,
+    COUNTRY_CODE: req.body.COUNTRY_CODE,
     PHONE_NO: req.body.PHONE_NO,
     ADDRESS: req.body.ADDRESS,
   };
 
+  // console.log(newCustomer, req.body);
+
   const salt = await bcrypt.genSalt(10);
   newCustomer.PASSWORD = await bcrypt.hash(newCustomer.PASSWORD, salt);
-  const resp = await db.executeQuery(
-    `INSERT INTO CUSTOMERS VALUES ('${newCustomer.CUSTOMER_ID}', '${newCustomer.PASSWORD}', '${newCustomer.EMAIL}', '${newCustomer.CNAME}', '${newCustomer.GENDER}', STR_TO_DATE('${newCustomer.DOB}','%Y/%m/%d'), '${newCustomer.ROLE}', '${newCustomer.PROFESSION}', '${newCustomer.PHONE_NO}', '${newCustomer.ADDRESS}')`
-  );
+  // console.log(newCustomer.PASSWORD);
+  // const queery = "SELECT * FROM CUSTOMERS";
+
+  const queery = `INSERT INTO CUSTOMERS VALUES ('${newCustomer.CUSTOMER_ID}', '${newCustomer.PASSWORD}', '${newCustomer.EMAIL_ID}', '${newCustomer.CNAME}', '${newCustomer.GENDER}', STR_TO_DATE('${newCustomer.DOB}','%Y-%m-%d'), '${newCustomer.ROLE}', '${newCustomer.PROFESSION}','${newCustomer.COUNTRY_CODE}', '${newCustomer.PHONE_NO}', '${newCustomer.ADDRESS}')`;
+  // console.log(queery);
+  const resp = await db.executeQuery(queery);
 
   console.log(resp);
 
@@ -161,3 +169,11 @@ export const logout = catchAsync(async (req, res, next) => {
     token,
   });
 });
+
+export const loggedInStatus = (req, res) => {
+  console.log("xyz");
+  res.status(200).json({
+    status: "success",
+    data: { user: req.user },
+  });
+};

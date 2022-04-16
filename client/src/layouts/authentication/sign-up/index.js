@@ -14,10 +14,19 @@ Coded by www.creative-tim.com
 */
 
 // react-router-dom components
-import { Link } from "react-router-dom";
-
+import { Link, Navigate } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
 // @mui material components
-import Card from "@mui/material/Card";
+import {
+  Button,
+  Grid,
+  Box,
+  Container,
+  MenuItem,
+  CssBaseline,
+  Card,
+  TextField,
+} from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 
 // Material Dashboard 2 React components
@@ -27,89 +36,306 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 // Authentication layout components
-import CoverLayout from "layouts/authentication/components/CoverLayout";
+import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import CountryCode from "layouts/form/data/countryCode.js";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import axios from "axiosInstance";
+import AuthContext from "authContext";
+import Spinner from "components/Spinner";
 
 function Cover() {
+  const [gender, setGender] = React.useState();
+  const [countryCode, setCountryCode] = React.useState();
+  const [dateValue, setDateValue] = React.useState();
+  const [emailVal, setEmailVal] = useState("");
+  const [passVal, setPassVal] = useState("");
+  const [nameVal, setNameVal] = useState("");
+  const [usernameVal, setUsernameVal] = useState("");
+  const [addressVal, setAddressVal] = useState("");
+  const [professionVal, setProfessionVal] = useState("Other");
+  const [roleVal, setRoleVal] = useState("");
+  const [phoneVal, setPhoneVal] = useState("");
+  const { authenticated, updateAuthData } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(false);
+
+  const handleSignUp = () => {
+    setLoading(true);
+    axios
+      .post(`auth/signup`, {
+        CUSTOMER_ID: usernameVal,
+        CNAME: nameVal,
+        EMAIL_ID: emailVal,
+        PASSWORD: passVal,
+        GENDER: gender,
+        DOB: dateValue,
+        ROLE: "W",
+        PROFESSION: professionVal,
+        COUNTRY_CODE: countryCode,
+        PHONE_NO: phoneVal,
+        ADDRESS: addressVal,
+      })
+      .then((res) => {
+        // console.log(res.data);
+        localStorage.setItem("jwt", res.data.token);
+        updateAuthData(
+          true,
+          res.data.data.user,
+          res.data.data.user.ROLE === "W" || res.data.data.user.ROLE === "R",
+          res.data.data.user.ROLE === "W"
+        );
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
+  const handleDateChange = (newDate) => {
+    setDateValue(newDate);
+  };
+
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+  };
+
+  const handleCountryCodeChange = (event) => {
+    setCountryCode(event.target.value);
+  };
+
+  const handleSubmit = () => {};
+
   return (
-    <CoverLayout image={bgImage}>
-      <Card>
-        <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="success"
-          mx={2}
-          mt={-3}
-          p={3}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Join us today
-          </MDTypography>
-          <MDTypography display="block" variant="button" color="white" my={1}>
-            Enter your email and password to register
-          </MDTypography>
-        </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
-            <MDBox mb={2}>
-              <MDInput type="text" label="Name" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Checkbox />
+    <>
+      {authenticated === false ? (
+        <BasicLayout image={bgImage}>
+          <Card sx={{ marginTop: 8 }}>
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={2}
+              mt={-3}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
               <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                variant="h4"
+                fontWeight="medium"
+                color="white"
+                mt={1}
               >
-                &nbsp;&nbsp;I agree the&nbsp;
-              </MDTypography>
-              <MDTypography
-                component="a"
-                href="#"
-                variant="button"
-                fontWeight="bold"
-                color="info"
-                textGradient
-              >
-                Terms and Conditions
+                Sign Up
               </MDTypography>
             </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                sign in
-              </MDButton>
-            </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Already have an account?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/authentication/sign-in"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
+            <Box pt={4} pb={0} px={3}>
+              <Box component="form" role="form">
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ maxHeight: "35vh", overflowY: "scroll" }}
                 >
-                  Sign In
-                </MDTypography>
-              </MDTypography>
-            </MDBox>
-          </MDBox>
-        </MDBox>
-      </Card>
-    </CoverLayout>
+                  <Grid item xs={12} sm={6}>
+                    <MDInput
+                      // autoComplete="given-name"
+                      name="username"
+                      required
+                      fullWidth
+                      id="name"
+                      label="Username"
+                      autoFocus
+                      value={usernameVal}
+                      onChange={(e) => setUsernameVal(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <MDInput
+                      // autoComplete="given-name"
+                      name="password"
+                      required
+                      fullWidth
+                      id="name"
+                      label="Password"
+                      type="password"
+                      value={passVal}
+                      onChange={(e) => setPassVal(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <MDInput
+                      autoComplete="given-name"
+                      name="name"
+                      required
+                      fullWidth
+                      id="name"
+                      label="Full Name"
+                      value={nameVal}
+                      onChange={(e) => setNameVal(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <MDInput
+                      fullWidth
+                      id="gender"
+                      select
+                      SelectProps={{ native: true }}
+                      label="Gender"
+                      value={gender}
+                      onChange={handleGenderChange}
+                    >
+                      {[
+                        { value: "M", label: "Male" },
+                        { value: "F", label: "Female" },
+                        { value: "O", label: "Others" },
+                      ].map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </MDInput>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        // label="Date of Journey"
+                        inputFormat="dd/MM/yyyy"
+                        value={dateValue}
+                        onChange={handleDateChange}
+                        maxDate={new Date()}
+                        // defaultValue={dateValue}
+                        label="Birth Date"
+                        id="dob"
+                        name="dob"
+                        // fullWidth
+                        renderInput={(params) => (
+                          <MDInput fullWidth required {...params} />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <MDInput
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      value={emailVal}
+                      onChange={(e) => setEmailVal(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      name="countryCode"
+                      required
+                      fullWidth
+                      select
+                      id="CountryCode"
+                      label="Country Code"
+                      value={countryCode}
+                      SelectProps={{ native: true }}
+                      onChange={handleCountryCodeChange}
+                    >
+                      {CountryCode.map((option, idx) => (
+                        <option key={idx} value={option.dial_code}>
+                          {option.name}
+                        </option>
+                      ))}
+                    </MDInput>
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <MDInput
+                      name="contactNo"
+                      required
+                      fullWidth
+                      id="contactNo"
+                      label="Contact Number"
+                      value={phoneVal}
+                      onChange={(e) => setPhoneVal(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={7}>
+                    <MDInput
+                      multiline
+                      required
+                      fullWidth
+                      name="address"
+                      label="Address"
+                      id="address"
+                      value={addressVal}
+                      onChange={(e) => setAddressVal(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={5}>
+                    <MDInput
+                      fullWidth
+                      select
+                      SelectProps={{ native: true }}
+                      label="Profession"
+                      value={professionVal}
+                      onChange={(e) => setProfessionVal(e.target.value)}
+                    >
+                      {[
+                        { value: "OTHER", label: "Other" },
+                        { value: "STUDENT", label: "Student" },
+                        { value: "ARMYPERSONNEL", label: "Army Personnel" },
+                        { value: "SENIORCITIZEN", label: "Senior Citizen" },
+                      ].map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </MDInput>
+                  </Grid>
+                </Grid>
+
+                <MDBox mt={4} mb={1}>
+                  <MDButton
+                    variant="gradient"
+                    color={loading ? "disabled" : "info"}
+                    disabled={loading}
+                    fullWidth
+                    onClick={handleSignUp}
+                  >
+                    {loading ? (
+                      <Spinner color="dark" size={30} />
+                    ) : (
+                      "create account"
+                    )}
+                  </MDButton>
+                </MDBox>
+                <MDBox mt={3} mb={2} textAlign="center">
+                  <MDTypography variant="button" color="text">
+                    Already have an account?{" "}
+                    <MDTypography
+                      component={Link}
+                      to="/authentication/sign-in"
+                      variant="button"
+                      color="info"
+                      fontWeight="medium"
+                      textGradient
+                    >
+                      Sign In
+                    </MDTypography>
+                  </MDTypography>
+                </MDBox>
+              </Box>
+            </Box>
+          </Card>
+        </BasicLayout>
+      ) : (
+        <Navigate replace to="/dashboard" />
+      )}
+    </>
   );
 }
 

@@ -13,10 +13,10 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -40,91 +40,125 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import axios from "axiosInstance";
+import AuthContext from "authContext";
+import Spinner from "components/Spinner";
 
 function Basic() {
-  const [rememberMe, setRememberMe] = useState(false);
+  const [emailVal, setEmailVal] = useState("");
+  const [passVal, setPassVal] = useState("");
+  const { authenticated, updateAuthData } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const handleSignIn = () => {
+    setLoading(true);
+    axios
+      .post(`auth/login`, {
+        email: emailVal,
+        password: passVal,
+      })
+      .then((res) => {
+        // console.log(res);
+        localStorage.setItem("jwt", res.data.token);
+        updateAuthData(
+          true,
+          res.data.data.user,
+          res.data.data.user.ROLE === "W" || res.data.data.user.ROLE === "R",
+          res.data.data.user.ROLE === "W"
+        );
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
 
   return (
-    <BasicLayout image={bgImage}>
-      <Card>
-        <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="info"
-          mx={2}
-          mt={-3}
-          p={2}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Sign in
-          </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
-            <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
+    <>
+      {authenticated === false ? (
+        <BasicLayout image={bgImage}>
+          <Card>
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={2}
+              mt={-3}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
               <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                variant="h4"
+                fontWeight="medium"
+                color="white"
+                mt={1}
               >
-                &nbsp;&nbsp;Remember me
+                Sign in
               </MDTypography>
             </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                sign in
-              </MDButton>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox component="form" role="form">
+                <MDBox mb={2}>
+                  <MDInput
+                    type="email"
+                    label="Email"
+                    fullWidth
+                    value={emailVal}
+                    onChange={(e) => setEmailVal(e.target.value)}
+                    error={
+                      !emailVal.match(
+                        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+                      )
+                    }
+                  />
+                </MDBox>
+                <MDBox mb={2}>
+                  <MDInput
+                    type="password"
+                    label="Password"
+                    fullWidth
+                    value={passVal}
+                    onChange={(e) => setPassVal(e.target.value)}
+                    error={passVal.length < 4}
+                  />
+                </MDBox>
+                <MDBox mt={4} mb={1}>
+                  <MDButton
+                    variant="gradient"
+                    color={loading ? "disabled" : "info"}
+                    disabled={loading}
+                    fullWidth
+                    onClick={handleSignIn}
+                  >
+                    {loading ? <Spinner color="dark" size={30} /> : "sign in"}
+                  </MDButton>
+                </MDBox>
+                <MDBox mt={3} mb={1} textAlign="center">
+                  <MDTypography variant="button" color="text">
+                    Don&apos;t have an account?{" "}
+                    <MDTypography
+                      component={Link}
+                      to="/authentication/sign-up"
+                      variant="button"
+                      color="info"
+                      fontWeight="medium"
+                      textGradient
+                    >
+                      Sign up
+                    </MDTypography>
+                  </MDTypography>
+                </MDBox>
+              </MDBox>
             </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/authentication/sign-up"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Sign up
-                </MDTypography>
-              </MDTypography>
-            </MDBox>
-          </MDBox>
-        </MDBox>
-      </Card>
-    </BasicLayout>
+          </Card>
+        </BasicLayout>
+      ) : (
+        <Navigate replace to="/dashboard" />
+      )}
+    </>
   );
 }
 
