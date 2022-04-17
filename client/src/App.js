@@ -134,22 +134,22 @@ export default function App() {
       }
 
       if (route.route) {
-        if (authenticated)
-          return (
-            <Route
-              exact
-              path={route.route}
-              element={route.component}
-              key={route.key}
-            />
-          );
-        else
+        if (!authenticated && route.name !== "Signup")
           return (
             <Route
               exact
               path={signinRoute.route}
               element={signinRoute.component}
               key={signinRoute.key}
+            />
+          );
+        else
+          return (
+            <Route
+              exact
+              path={route.route}
+              element={route.component}
+              key={route.key}
             />
           );
       }
