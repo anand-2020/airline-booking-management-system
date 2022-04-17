@@ -71,6 +71,7 @@ function Overview() {
               />
             </Grid>
           </Header>
+          <Footer />
         </DashboardLayout>
       ) : (
         <Navigate replace to="/dashboard" />

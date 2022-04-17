@@ -122,7 +122,7 @@ function DefaultNavbar({ transparent, light, action }) {
           <DefaultNavbarLink
             icon="donut_large"
             name="search flights"
-            route="/dashboard"
+            route="/searchFlights"
             light={light}
           />
           <DefaultNavbarLink

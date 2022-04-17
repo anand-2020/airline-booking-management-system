@@ -54,7 +54,7 @@ import {
 } from "context";
 
 // Images
-import brandWhite from "assets/images/monke.png";
+import brandWhite from "assets/images/logos/logo.png";
 import axios from "axiosInstance";
 import AuthContext from "authContext";
 
@@ -125,6 +125,8 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
+  const signinRoute = routes.find((el) => el.key === "signin");
+
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
@@ -132,18 +134,32 @@ export default function App() {
       }
 
       if (route.route) {
-        return (
-          <Route
-            exact
-            path={route.route}
-            element={route.component}
-            key={route.key}
-          />
-        );
+        if (authenticated)
+          return (
+            <Route
+              exact
+              path={route.route}
+              element={route.component}
+              key={route.key}
+            />
+          );
+        else
+          return (
+            <Route
+              exact
+              path={signinRoute.route}
+              element={signinRoute.component}
+              key={signinRoute.key}
+            />
+          );
       }
 
       return null;
     });
+
+  const navbarRoutes = routes.filter(
+    (el) => el.key !== "signup" && el.key !== "signin"
+  );
 
   return (
     <AuthContext.Provider
@@ -162,14 +178,23 @@ export default function App() {
             color={sidenavColor}
             brand={brandWhite}
             brandName="Monke Airlines"
-            routes={routes}
+            routes={navbarRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
         )}
         <Routes>
           {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
+          <Route
+            path="*"
+            element={
+              authenticated ? (
+                <Navigate to="/searchFlights" />
+              ) : (
+                <Navigate to="/authentication/sign-in" />
+              )
+            }
+          />
         </Routes>
       </ThemeProvider>
     </AuthContext.Provider>

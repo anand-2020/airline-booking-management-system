@@ -51,39 +51,32 @@ import UserTickets from "layouts/userTickets";
 import Icon from "@mui/material/Icon";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import FlightLandIcon from "@mui/icons-material/FlightLand";
+import Logout from "layouts/authentication/logout";
 
 const routes = [
   {
     type: "collapse",
-    name: "Dashboard",
-    key: "dashboard",
+    name: "Search Flights",
+    key: "searchflights",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
+    route: "/searchFlights",
     component: <Profile2 />,
   },
   {
     type: "collapse",
-    name: "Tables",
-    key: "tables",
+    name: "Book",
+    key: "book",
     icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
+    route: "/bookFlight",
     component: <Booking />,
   },
   {
     type: "collapse",
-    name: "Billing",
-    key: "billing",
+    name: "Admin",
+    key: "admin",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
+    route: "/admin",
     component: <Admin />,
-  },
-  {
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
   },
   {
     type: "collapse",
@@ -111,19 +104,27 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Sign In",
-    key: "sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
+    name: "Logout",
+    key: "Logout",
+    icon: <Icon fontSize="small">logout</Icon>,
+    route: "/authentication/logout",
+    component: <Logout />,
   },
   {
     type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
-    icon: <Icon fontSize="small">assignment</Icon>,
+    name: "Signup",
+    key: "signup",
+    icon: <Icon fontSize="small">logout</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "collapse",
+    name: "Signin",
+    key: "signin",
+    icon: <Icon fontSize="small">logout</Icon>,
+    route: "/authentication/sign-in",
+    component: <SignIn />,
   },
 ];
 

@@ -44,7 +44,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 import moment from "moment";
 
 // Images
-import backgroundImage from "assets/images/bg-profile.jpeg";
+import backgroundImage from "assets/images/welcome-page/3.jpg";
 import MDButton from "components/MDButton";
 
 import TicketInformation from "../../../tickets/components/TicketInformation";
@@ -131,13 +131,6 @@ function Header({ children, airports }) {
                 lineHeight={1}
                 width="auto"
               >
-                {/* <MDTypography
-                  variant="h1"
-                  fontWeight={"bold"}
-                  color={"white"}
-                  display={"flex"}
-                > */}
-                {/* <FlightTakeOff sx={{ mt: 1, mx: 0.5 }} /> */}
                 <Autocomplete
                   options={airports}
                   groupBy={(option) => option.COUNTRY}
@@ -152,36 +145,14 @@ function Header({ children, airports }) {
                     },
                   }}
                   value={source}
-                  // placeholder="SRC."
-                  // inputProps={{
-                  //   style: {
-
-                  //   },
-                  // }}
                   onChange={(e, value) => setSource(value)}
                   renderInput={(params) => (
                     <MDInput {...params} placeholder="SRC." />
                   )}
                 />
-                {/* <MDInput
-                  width="auto"
-                  inputProps={{
-                    style: {
-                      fontSize: 30,
-                      color: "white",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    },
-                  }}
-                  type="search"
-                  
-                ></MDInput> */}
-                {/* </MDTypography> */}
               </MDBox>
             </Grid>
 
-            {/* <Grid item lg={1} sm={1} xs={1} ml={"auto"}>
-              <MDBox height="100%" mt={0.5} lineHeight={1} width="auto"> */}
             <MDTypography
               variant="h1"
               fontWeight={"bold"}
@@ -197,18 +168,9 @@ function Header({ children, airports }) {
                 }}
               />
             </MDTypography>
-            {/* </MDBox>
-            </Grid> */}
 
             <Grid item lg={4} sm={5} xs={12}>
               <MDBox height="100%" mt={0.5} lineHeight={1}>
-                {/* <MDTypography
-                  variant="h1"
-                  fontWeight={"bold"}
-                  color={"white"}
-                  display={"flex"}
-                > */}
-                {/* <FlightLand sx={{ mt: 1, mx: 0.5 }} /> */}
                 <Autocomplete
                   options={airports}
                   groupBy={(option) => option.COUNTRY}
@@ -223,18 +185,11 @@ function Header({ children, airports }) {
                     },
                   }}
                   value={destination}
-                  // placeholder="SRC."
-                  // inputProps={{
-                  //   style: {
-
-                  //   },
-                  // }}
                   onChange={(e, value) => setDestination(value)}
                   renderInput={(params) => (
                     <MDInput {...params} placeholder="DEST." />
                   )}
                 />
-                {/* </MDTypography> */}
               </MDBox>
             </Grid>
           </Grid>
@@ -277,19 +232,6 @@ function Header({ children, airports }) {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
-                  {/* <MDInput
-                  width="auto"
-                  inputProps={{
-                    style: {
-                      fontSize: 30,
-                      color: "white",
-                      fontWeight: "bold",
-                      textAlign: "center",
-                    },
-                  }}
-                  // type="search"
-                  placeholder="DD-MM-YYYY"
-                ></MDInput> */}
                 </MDTypography>
               </MDBox>
             </Grid>
@@ -300,6 +242,7 @@ function Header({ children, airports }) {
                   variant="contained"
                   size="large"
                   onClick={handleSearch}
+                  disabled={source === null || destination === null}
                   color={loading ? "disabled" : "white"}
                 >
                   {loading ? <Spinner size={20} /> : "SEARCH"}
@@ -323,7 +266,13 @@ function Header({ children, airports }) {
         {loading ? (
           <Spinner />
         ) : (
-          <TicketInformation flights={flights}></TicketInformation>
+          <TicketInformation
+            flights={flights}
+            destCity={`${destination?.CITY}`}
+            srcCity={`${source?.CITY}`}
+            srcID={source?.AIRPORT_ID}
+            destID={destination?.AIRPORT_ID}
+          ></TicketInformation>
         )}
       </Card>
     </MDBox>

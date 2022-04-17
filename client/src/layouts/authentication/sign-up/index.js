@@ -333,7 +333,7 @@ function Cover() {
           </Card>
         </BasicLayout>
       ) : (
-        <Navigate replace to="/dashboard" />
+        <Navigate replace to="/searchFlights" />
       )}
     </>
   );

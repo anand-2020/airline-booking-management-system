@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 // @mui material components
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -26,131 +26,100 @@ import { Divider, Tab, Tabs, Box, ButtonGroup, Button } from "@mui/material";
 
 // Billing page components
 import Ticket from "layouts/tickets/components/Ticket";
+import moment from "moment";
 
-function TicketInformation() {
-  const [value, setValue] = React.useState(0);
+function TicketInformation(props) {
   const [activeDate, setActiveDate] = React.useState(0);
+  const [fdates, setFdates] = useState([]);
+  const [flights, setFlights] = useState([]);
 
   const handleDateButtonClick = (idx) => {
     setActiveDate(idx);
+    filterByDate(fdates[idx]);
   };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const filterByDate = (date) => {
+    const filtered = props.flights.filter(
+      (flight) =>
+        moment(flight.DEP_TS.substring(0, 10)).format("DD/MM/YY") === date
+    );
+    setFlights(filtered);
   };
 
-  const dates = [
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-    "19/02/2022",
-  ];
+  useEffect(() => {
+    let dates = [];
+    props.flights.forEach((flight) =>
+      dates.push(moment(flight.DEP_TS.substring(0, 10)).format("DD/MM/YY"))
+    );
+    dates = dates.filter((x, i, a) => a.indexOf(x) === i);
+    setFdates(dates);
+    filterByDate(dates[activeDate]);
+  }, [props.flights]);
 
   return (
     // <Card id="delete-account">
     <>
-      <MDBox
-        pt={3}
-        px={2}
-        sx={{ overflowX: "scroll" }}
-        // sx={{ maxWidth: "50vw", bgcolor: "white" }}
-      >
-        {/* <Tabs
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons
-          allowScrollButtonsMobile
-        >
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-          <MDBox sx={{ minWidth: "180px" }}>
-            <Tab wrapped label="22/01/2022" />
-            <Divider orientation="vertical" />
-          </MDBox>
-        </Tabs> */}
-
-        <ButtonGroup>
-          {dates.map((date, idx) => (
-            <Button
-              key={idx}
-              variant={idx === activeDate ? "contained" : "text"}
-              onClick={() => handleDateButtonClick(idx)}
-            >
-              <MDTypography
-                opacity={10}
-                variant="h6"
-                color={idx === activeDate ? "white" : "dark"}
-              >
-                {date}
-              </MDTypography>
-            </Button>
-          ))}
-        </ButtonGroup>
-      </MDBox>
-      <MDBox pt={1} pb={2} px={2}>
-        <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-          <Ticket
-            srcId="DEL"
-            srcCity="New Delhi"
-            destId="HYD"
-            destCity="Hyderabad"
-            departure="10:40"
-            arrival="13:00"
-            duration="2hr 20min"
-            fare="6500"
-          />
-          <Ticket
-            srcId="DEL"
-            srcCity="New Delhi"
-            destId="HYD"
-            destCity="Hyderabad"
-            departure="10:40"
-            arrival="13:00"
-            duration="2hr 20min"
-            fare="6500"
-          />
-          <Ticket
-            srcId="DEL"
-            srcCity="New Delhi"
-            destId="HYD"
-            destCity="Hyderabad"
-            departure="10:40"
-            arrival="13:00"
-            duration="2hr 20min"
-            fare="6500"
-            noGutter
-          />
+      {props.flights.length === 0 ? (
+        <MDBox pt={3} px={2} sx={{ display: "flex", justifyContent: "center" }}>
+          <MDTypography variant="h3">Ummm... No flights :(</MDTypography>
         </MDBox>
-      </MDBox>
+      ) : (
+        <>
+          <MDBox
+            pt={3}
+            px={2}
+            sx={{ overflowX: "scroll" }}
+            // sx={{ maxWidth: "50vw", bgcolor: "white" }}
+          >
+            <ButtonGroup>
+              {fdates.map((date, idx) => (
+                <>
+                  <Button
+                    key={idx}
+                    variant={idx === activeDate ? "contained" : "outlined"}
+                    onClick={() => handleDateButtonClick(idx)}
+                    sx={{ width: "200px" }}
+                  >
+                    <MDTypography
+                      opacity={10}
+                      variant="h6"
+                      color={idx === activeDate ? "white" : "dark"}
+                    >
+                      {date}
+                    </MDTypography>
+                  </Button>
+                  {/* <Divider orientation="vertical" sx={{ color: "black" }} /> */}
+                </>
+              ))}
+            </ButtonGroup>
+          </MDBox>
+          <MDBox pt={1} pb={2} px={2}>
+            <MDBox
+              component="ul"
+              display="flex"
+              flexDirection="column"
+              p={0}
+              m={0}
+            >
+              {flights.map((flight, idx) => (
+                <Ticket
+                  key={idx}
+                  srcId={props.srcID}
+                  srcCity={props.srcCity}
+                  destId={props.destID}
+                  destCity={props.destCity}
+                  departure={moment.utc(flight.DEP_TS).format("HH:mm")}
+                  arrival={moment.utc(flight.ARR_TS).format("HH:mm")}
+                  duration={flight.DURATION}
+                  fare={flight.TICKET_PRICE}
+                  flightId={flight.FLIGHT_ID}
+                  delay={flight.DELAYED_BY}
+                />
+              ))}
+            </MDBox>
+          </MDBox>
+        </>
+      )}
     </>
     // </Card>
   );

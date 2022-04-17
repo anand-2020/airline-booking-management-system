@@ -26,10 +26,13 @@ import { Divider, Tab, Tabs, Box, ButtonGroup, Button } from "@mui/material";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Ticket from "layouts/userTickets/components/Ticket";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 function TicketInformation({ isUpcoming }) {
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       <Card id="delete-account">
         <MDBox pt={1} pb={2} px={2}>
           <MDBox
@@ -87,6 +90,7 @@ function TicketInformation({ isUpcoming }) {
           </MDBox>
         </MDBox>
       </Card>
+      <Footer />
     </DashboardLayout>
   );
 }

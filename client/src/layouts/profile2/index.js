@@ -48,7 +48,7 @@ function Overview() {
 
   return (
     <DashboardLayout>
-      {/* <DashboardNavbar /> */}
+      <DashboardNavbar />
       {loading ? (
         <MDBox
           sx={{
@@ -66,7 +66,7 @@ function Overview() {
           <Header airports={airports}></Header>
         </>
       )}
-      {/* <Footer /> */}
+      <Footer />
     </DashboardLayout>
   );
 }
