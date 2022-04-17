@@ -16,7 +16,6 @@ Coded by www.creative-tim.com
 // @mui material components
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import React from "react";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -24,67 +23,170 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import { Divider, Tab, Tabs, Box, ButtonGroup, Button } from "@mui/material";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Ticket from "layouts/userTickets/components/Ticket";
+import React, { useState, useContext, useEffect } from "react";
+import axios from "axiosInstance";
+import AuthContext from "authContext";
+import Spinner from "components/Spinner";
 
 function TicketInformation({ isUpcoming }) {
+  const { authenticated, currentUser } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [tickets, setTickets] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [toDeleteTicketId, setToDeleteTicketId] = useState("");
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const getTickets = (url) => {
+    setLoading(true);
+
+    axios
+      .get(url)
+      .then((res) => {
+        // console.log("RES");
+        console.log(res.data.data);
+        setTickets(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        // console.log("ERR");
+        console.log(err.response.data);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (!currentUser) return;
+    if (isUpcoming === true)
+      getTickets(`customer/${currentUser.CUSTOMER_ID}/upcomingTickets`);
+    else getTickets(`customer/${currentUser.CUSTOMER_ID}/archiveTickets`);
+  }, [currentUser, isUpcoming]);
+
+  const cancelTicket = () => {
+    axios
+      .patch(`ticket/${toDeleteTicketId}`)
+      .then((res) => {
+        // console.log("res");
+        console.log(res);
+        setToDeleteTicketId("");
+        setOpen(false);
+        setIsCancelling(false);
+        getTickets(`customer/${currentUser.CUSTOMER_ID}/upcomingTickets`);
+      })
+      .catch((err) => {
+        // console.log("err");
+        console.log(err);
+        setToDeleteTicketId("");
+        setOpen(false);
+        setIsCancelling(false);
+      });
+  };
+
+  const ConfirmationDialog = (
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="confirm-dialog"
+      textAlign="center"
+      justify="center"
+      alignItems="center"
+    >
+      <DialogTitle textAlign="center">
+        <MDTypography fontWeight="medium">Confirm Cancellation</MDTypography>
+      </DialogTitle>
+
+      <DialogContent id="confirm-dialog" textAlign="center">
+        <MDTypography variant="h6" fontWeight="regular">
+          Ticket ID: {toDeleteTicketId}
+        </MDTypography>
+      </DialogContent>
+      <DialogActions>
+        {isCancelling === true ? (
+          <Spinner />
+        ) : (
+          <>
+            <MDButton
+              variant="contained"
+              onClick={() => setOpen(false)}
+              color="info"
+            >
+              No
+            </MDButton>
+            <MDButton
+              variant="contained"
+              onClick={() => {
+                setIsCancelling(true);
+                cancelTicket();
+              }}
+              color="info"
+            >
+              Yes
+            </MDButton>
+          </>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
+
+  const cancelConfirmation = (ticketId) => {
+    setToDeleteTicketId(ticketId);
+    setOpen(true);
+  };
+
   return (
     <DashboardLayout>
       <Card id="delete-account">
         <MDBox pt={1} pb={2} px={2}>
-          <MDBox
-            component="ul"
-            display="flex"
-            flexDirection="column"
-            p={0}
-            m={0}
-          >
-            <Ticket
-              srcId="DEL"
-              srcCity="New Delhi"
-              destId="HYD"
-              destCity="Hyderabad"
-              departure="10:40"
-              arrival="13:00"
-              duration="2hr 20min"
-              fare="6500"
-              passengerName="Aaron Finch"
-              bookedDate="10-04-2022"
-              departureDate="15-04-2022"
-              isUpcoming={isUpcoming}
-            />
-            <Ticket
-              srcId="DEL"
-              srcCity="New Delhi"
-              destId="HYD"
-              destCity="Hyderabad"
-              departure="10:40"
-              arrival="13:00"
-              duration="2hr 20min"
-              fare="6500"
-              passengerName="Mitchell Johnson"
-              bookedDate="10-04-2022"
-              departureDate="15-04-2022"
-              isUpcoming={isUpcoming}
-              isCancelled={false}
-            />
-            <Ticket
-              srcId="DEL"
-              srcCity="New Delhi"
-              destId="HYD"
-              destCity="Hyderabad"
-              departure="10:40"
-              arrival="13:00"
-              duration="2hr 20min"
-              fare="6500"
-              passengerName="Pat Cummins"
-              bookedDate="10-04-2022"
-              departureDate="15-04-2022"
-              isUpcoming={isUpcoming}
-              isCancelled={!isUpcoming && true}
-              cancelledDate="14-04-2022"
-            />
-          </MDBox>
+          {loading === true ? (
+            <Spinner />
+          ) : (
+            <MDBox
+              component="ul"
+              display="flex"
+              flexDirection="column"
+              p={0}
+              m={0}
+            >
+              {ConfirmationDialog}
+              {tickets.map((ticket) => (
+                <Ticket
+                  key={ticket.TICKET_ID}
+                  ticketId={ticket.TICKET_ID}
+                  flightId={ticket.FLIGHT_ID}
+                  srcId={ticket.SRC_AIRPORT_ID}
+                  srcAirportName={ticket.SRC_AIRPORT_NAME}
+                  srcCity={ticket.SRC_CITY}
+                  srcCountry={ticket.SRC_COUNTRY}
+                  destId={ticket.DEST_AIRPORT_ID}
+                  destAirportName={ticket.DEST_AIRPORT_NAME}
+                  destCity={ticket.DEST_CITY}
+                  destCountry={ticket.DEST_COUNTRY}
+                  departure={ticket.DEP_TS}
+                  arrival={ticket.ARR_TS}
+                  duration={ticket.DURATION}
+                  fare={ticket.FARE}
+                  passengerName={ticket.PASSENGER_NAME}
+                  passengerAge={ticket.PASSENGER_AGE}
+                  bookedDate={ticket.TIME_OF_BOOKING}
+                  cancelledDate={ticket.TIME_OF_CANCELLATION}
+                  reimbursedAmount={ticket.REIMBURSED_AMOUNT}
+                  departureDate={ticket.DEP_TS}
+                  isUpcoming={isUpcoming}
+                  isCancelled={ticket.STATUS === "CANCELLED" ? true : false}
+                  cancelConfirmation={(ticketId) =>
+                    cancelConfirmation(ticketId)
+                  }
+                />
+              ))}
+            </MDBox>
+          )}
         </MDBox>
       </Card>
     </DashboardLayout>

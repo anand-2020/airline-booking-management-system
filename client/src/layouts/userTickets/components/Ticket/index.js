@@ -39,23 +39,35 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 import Grid from "@mui/material/Grid";
-import { Divider } from "@mui/material";
+import { IconButton, Divider } from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import { useState } from "react";
+import Icon from "@mui/material/Icon";
 
 function Ticket({
+  ticketId,
+  flightId,
   srcId,
+  srcAirportName,
   srcCity,
+  srcCountry,
   destId,
+  destAirportName,
+  destCountry,
   destCity,
   departure,
   arrival,
   duration,
   fare,
   passengerName,
+  passengerAge,
   bookedDate,
   departureDate,
   isUpcoming,
   isCancelled,
-  isCancelledDate,
+  cancelledDate,
+  reimbursedAmount,
+  cancelConfirmation,
   noGutter,
 }) {
   const [controller] = useMaterialUIController();
@@ -427,7 +439,7 @@ function Ticket({
         </div>
         <div class="seating_passenger_dos">
           <h2>Booked At</h2>
-          <h3> ${bookedDate}</h3>
+          <h3>${new Date(bookedDate).toString().substring(0, 24)}</h3>
         </div>
         <div class="seating_seat">
           <h2>Seat</h2>
@@ -441,11 +453,11 @@ function Ticket({
         </div>
         <div class="details_date">
           <h2>Depart</h2>
-          <h3>${departureDate}</h3>
+          <h3>${new Date(departureDate).toString().substring(0, 24)}</h3>
         </div>
         <div class="details_time">
           <h2>Depart</h2>
-          <h3>10:55 am</h3>
+          <h3>${new Date(departure).toTimeString().substring(0, 5)}</h3>
         </div>
       </div>
     </div>
@@ -463,6 +475,165 @@ function Ticket({
     };
   })();
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
+
+  const titleCase = (str) => {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  };
+
+  const ticketDetails = (
+    <Grid
+      container
+      display="flex"
+      // direction="column"
+      justifyContent="space-around"
+      // alignItems="center"
+      spacing={0}
+      pt={2}
+    >
+      <Grid item xs={12}>
+        <Divider
+          orientation="horizontal"
+          sx={{ mx: 10, height: "1px", background: "gray" }}
+        />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        // md={4}
+        display="flex"
+        alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          SRC&nbsp;-&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          {`${srcAirportName}, ${srcCity}, ${srcCountry}`}
+        </MDTypography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        // md={4}
+        display="flex"
+        alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          DEST&nbsp;-&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          {`${destAirportName}, ${destCity}, ${destCountry}`}
+        </MDTypography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        // md={4}
+        display="flex"
+        // alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          FLIGHT ID&nbsp;-&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          {`${flightId}`}
+        </MDTypography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        // md={4}
+        display="flex"
+        // alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          FARE&nbsp;-&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          &#8377; {`${fare}`}
+        </MDTypography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        // md={4}
+        display="flex"
+        // alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          Passenger Name&nbsp;-&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          {`${passengerName}`}
+        </MDTypography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        // md={4}
+        display="flex"
+        // alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          Passenger Age&nbsp;-&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          {`${passengerAge} yrs`}
+        </MDTypography>
+      </Grid>
+      {isCancelled === true ? (
+        <>
+          <Grid item xs={12} sm={6} display="flex" justifyContent={"center"}>
+            <MDTypography fontWeight="bold" fontSize="medium">
+              Cancelled On&nbsp;-&nbsp;
+            </MDTypography>
+            <MDTypography
+              fontWeight="normal"
+              color="secondary"
+              fontSize="medium"
+            >
+              {new Date(cancelledDate).toString().substring(0, 24)}
+            </MDTypography>
+          </Grid>
+          <Grid item xs={12} sm={6} display="flex" justifyContent={"center"}>
+            <MDTypography fontWeight="bold" fontSize="medium">
+              Reimbursement&nbsp;-&nbsp;
+            </MDTypography>
+            <MDTypography
+              fontWeight="normal"
+              color="secondary"
+              fontSize="medium"
+            >
+              &#8377; {`${reimbursedAmount}`}
+            </MDTypography>
+          </Grid>
+        </>
+      ) : null}
+    </Grid>
+  );
+
   return (
     <MDBox
       bgColor={darkMode ? "transparent" : "grey-200"}
@@ -475,38 +646,10 @@ function Ticket({
         container
         // component="li"
         display="flex"
-        justifyContent="center"
+        justifyContent="space-around"
         alignItems="center"
-        spacing={10}
+        spacing={5}
       >
-        <Grid item display="flex" justifyContent={"flex-start"}>
-          <List>
-            <ListItem disablePadding>
-              <ListItemIcon>
-                <FlightTakeoffIcon />
-              </ListItemIcon>
-              <ListItemText sx={{ ml: -3 }}>
-                <MDTypography variant="h6" fontWeight="medium">
-                  {departureDate}
-                </MDTypography>
-              </ListItemText>
-            </ListItem>
-          </List>
-        </Grid>
-        <Grid item display="flex">
-          <List>
-            <ListItem disablePadding>
-              <ListItemIcon>
-                <AccountBoxIcon />
-              </ListItemIcon>
-              <ListItemText sx={{ ml: -3 }}>
-                <MDTypography variant="h6" fontWeight="light">
-                  {passengerName}
-                </MDTypography>
-              </ListItemText>
-            </ListItem>
-          </List>
-        </Grid>
         <Grid item display="flex">
           <List>
             <ListItem disablePadding>
@@ -515,11 +658,40 @@ function Ticket({
               </ListItemIcon>
               <ListItemText sx={{ ml: -3 }}>
                 <MDTypography variant="h6" fontWeight="light">
-                  {bookedDate}
+                  {new Date(bookedDate).toString().substring(0, 24)}
                 </MDTypography>
               </ListItemText>
             </ListItem>
           </List>
+        </Grid>
+        <Grid item display="flex" justify="center">
+          <List>
+            <ListItem disablePadding>
+              {/* <ListItemIcon>
+                <AccountBoxIcon />
+              </ListItemIcon> */}
+              <ListItemText sx={{ ml: -3 }}>
+                <Grid display="flex">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Ticket ID: &nbsp;
+                  </MDTypography>
+                  <MDTypography variant="h6" fontWeight="light">
+                    {ticketId}
+                  </MDTypography>
+                </Grid>
+              </ListItemText>
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item display="flex">
+          <MDButton
+            variant="outlined"
+            color="info"
+            size="small"
+            onClick={toPdf.printPage}
+          >
+            PRINT
+          </MDButton>
         </Grid>
       </Grid>
       <Divider
@@ -535,6 +707,20 @@ function Ticket({
         spacing={3}
         // mx="auto"
       >
+        <MDBox mr={2}>
+          <MDButton
+            variant="contained"
+            color="info"
+            iconOnly
+            circular
+            size="small"
+            onClick={toggleCollapse}
+          >
+            <Icon sx={{ fontWeight: "bold" }}>
+              {collapsed ? "expand_less" : "expand_more"}
+            </Icon>
+          </MDButton>
+        </MDBox>
         <Grid
           item
           lg={2}
@@ -548,11 +734,14 @@ function Ticket({
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
           <MDTypography variant="h4" fontWeight="bold">
-            {departure}
+            {new Date(departure).toTimeString().substring(0, 5)}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
-            {srcCity}
+            {new Date(departure).toDateString()}
           </MDTypography>
+          {/* <MDTypography variant="h6" fontWeight="light">
+            {srcCity}
+          </MDTypography> */}
           {/* </Stack> */}
           {/* </MDBox> */}
         </Grid>
@@ -571,7 +760,7 @@ function Ticket({
 
           <Divider flexItem>
             <MDTypography variant="h6" fontWeight="medium">
-              {duration}
+              {`${duration.substring(0, 2)} hr ${duration.substring(3, 5)} min`}
             </MDTypography>
           </Divider>
           {/* </Stack> */}
@@ -589,15 +778,18 @@ function Ticket({
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{destId}</MDTypography>
           <MDTypography variant="h4" fontWeight="bold">
-            {arrival}
+            {new Date(arrival).toTimeString().substring(0, 5)}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
-            {destCity}
+            {new Date(arrival).toDateString()}
           </MDTypography>
+          {/* <MDTypography variant="h6" fontWeight="light">
+            {destCity}
+          </MDTypography> */}
           {/* </Stack> */}
         </Grid>
 
-        <Grid
+        {/* <Grid
           item
           lg={2}
           sm={3}
@@ -607,32 +799,37 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="bold">&#8377;{fare}</MDTypography>
-        </Grid>
+        </Grid> */}
         {isUpcoming === true ? (
           <Grid
             item
-            lg={2}
+            lg={4}
             sm={3}
             xs={7}
             display="flex"
+            direction="column"
             alignItems="flex-end"
-            flexDirection={"column"}
+            justify="flex-end"
+            sx={{ ml: -2 }}
           >
-            <MDButton variant="outlined" color="info" size="small">
-              <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
-            </MDButton>
-            <MDButton
-              variant="outlined"
-              color="info"
-              size="small"
-              onClick={toPdf.printPage}
-            >
-              PRINT
-            </MDButton>
+            {isCancelled === true ? (
+              <MDButton variant="outlined" color="dark" disabled size="small">
+                <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
+              </MDButton>
+            ) : (
+              <MDButton
+                variant="outlined"
+                color="info"
+                size="small"
+                onClick={() => cancelConfirmation(ticketId)}
+              >
+                <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
+              </MDButton>
+            )}
           </Grid>
         ) : null}
       </Grid>
-      {isCancelled === true ? (
+      {/* {isCancelled === true ? (
         <Grid
           item
           sx={{ mt: 2, backgroundColor: "	#C0C0C0", borderRadius: 2 }}
@@ -640,14 +837,24 @@ function Ticket({
           alignItems="center"
           flexDirection={"column"}
         >
-          {/* <MDBox variant="outlined" color="info" size="small"> */}
+          
           <MDTypography variant="h5" fontWeight="bold" color="white">
             CANCELLED
           </MDTypography>
 
-          {/* </MDBox> */}
+          
         </Grid>
-      ) : null}
+      ) : null} */}
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Collapse in={collapsed}>{ticketDetails}</Collapse>
+      </Grid>
     </MDBox>
   );
 }
@@ -655,19 +862,6 @@ function Ticket({
 // Setting default values for the props of Bill
 Ticket.defaultProps = {
   noGutter: false,
-};
-
-// Typechecking props for the Bill
-Ticket.propTypes = {
-  srcId: PropTypes.string.isRequired,
-  srcCity: PropTypes.string.isRequired,
-  destId: PropTypes.string.isRequired,
-  destCity: PropTypes.string.isRequired,
-  departure: PropTypes.string.isRequired,
-  arrival: PropTypes.string.isRequired,
-  duration: PropTypes.string.isRequired,
-  fare: PropTypes.string.isRequired,
-  noGutter: PropTypes.bool,
 };
 
 export default Ticket;
