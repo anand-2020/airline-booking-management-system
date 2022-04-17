@@ -175,6 +175,7 @@ function TicketInformation({ isUpcoming }) {
                   arrival={ticket.ARR_TS}
                   duration={ticket.DURATION}
                   fare={ticket.FARE}
+                  seat={ticket.SEAT_NUM}
                   passengerName={ticket.PASSENGER_NAME}
                   passengerAge={ticket.PASSENGER_AGE}
                   bookedDate={ticket.TIME_OF_BOOKING}

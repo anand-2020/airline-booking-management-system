@@ -64,6 +64,7 @@ function Ticket({
   bookedDate,
   departureDate,
   isUpcoming,
+  seat,
   isCancelled,
   cancelledDate,
   reimbursedAmount,
@@ -683,6 +684,34 @@ function Ticket({
             </ListItem>
           </List>
         </Grid>
+        {isUpcoming === true ? (
+          <Grid
+            item
+            // lg={4}
+            // sm={3}
+            // xs={7}
+            display="flex"
+            //direction="column"
+            alignItems="flex-end"
+            justify="flex-end"
+            //  sx={{ ml: -2 }}
+          >
+            {isCancelled === true ? (
+              <MDButton variant="outlined" color="dark" disabled size="small">
+                <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
+              </MDButton>
+            ) : (
+              <MDButton
+                variant="outlined"
+                color="info"
+                size="small"
+                onClick={() => cancelConfirmation(ticketId)}
+              >
+                <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
+              </MDButton>
+            )}
+          </Grid>
+        ) : null}
         <Grid item display="flex">
           <MDButton
             variant="outlined"
@@ -788,6 +817,19 @@ function Ticket({
           </MDTypography> */}
           {/* </Stack> */}
         </Grid>
+        <Grid
+          item
+          sm={3}
+          xs={7}
+          display="flex"
+          alignItems="center"
+          flexDirection={"column"}
+        >
+          <MDTypography variant="h6" fontWeight="regular">
+            SEAT
+          </MDTypography>
+          <MDTypography fontWeight="medium">{seat}</MDTypography>
+        </Grid>
 
         {/* <Grid
           item
@@ -800,34 +842,6 @@ function Ticket({
         >
           <MDTypography fontWeight="bold">&#8377;{fare}</MDTypography>
         </Grid> */}
-        {isUpcoming === true ? (
-          <Grid
-            item
-            lg={4}
-            sm={3}
-            xs={7}
-            display="flex"
-            direction="column"
-            alignItems="flex-end"
-            justify="flex-end"
-            sx={{ ml: -2 }}
-          >
-            {isCancelled === true ? (
-              <MDButton variant="outlined" color="dark" disabled size="small">
-                <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
-              </MDButton>
-            ) : (
-              <MDButton
-                variant="outlined"
-                color="info"
-                size="small"
-                onClick={() => cancelConfirmation(ticketId)}
-              >
-                <CancelPresentationIcon></CancelPresentationIcon>&nbsp;CANCEL
-              </MDButton>
-            )}
-          </Grid>
-        ) : null}
       </Grid>
       {/* {isCancelled === true ? (
         <Grid
