@@ -50,21 +50,22 @@ export const protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
   }
+  // } else if (req.cookies.jwt) {
+  //   token = req.cookies.jwt;
+  // }
   if (!token) {
     return next(new AppError("You are not logged in", 401));
   }
   const decoded = await verifyJWT(token, next);
   if (!decoded) throw new AppError("Your Password or email is Wrong");
-
+  // console.log(decoded);
   const user = await db.executeQuery(
     `SELECT * FROM CUSTOMERS WHERE CUSTOMER_ID = '${decoded.id}'`
   );
   // console.log(user.data);
   if (!user.data.length) {
-    return new AppError(
+    throw new AppError(
       "The user belonging to this token does no longer exist.",
       401
     );
@@ -77,19 +78,19 @@ export const protect = catchAsync(async (req, res, next) => {
 
 export const restrictTo = (...roles) => {
   return catchAsync(async (req, res, next) => {
-    const id = req.user.id;
+    const id = req.user.CUSTOMER_ID;
     const user = await db.query(
       `SELECT ROLE FROM CUSTOMERS WHERE CUSTOMER_ID=${id}`
     );
     if (!user.data.length) {
-      return new AppError(
+      throw new AppError(
         "The user belonging to this token does no longer exist.",
         401
       );
     }
     const role = user.data[0].role;
     if (!roles.includes(role))
-      return next(
+      throw next(
         new AppError("You do not have permission to perform this action", 403)
       );
 

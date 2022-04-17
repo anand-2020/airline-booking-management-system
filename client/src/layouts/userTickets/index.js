@@ -35,6 +35,8 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "axiosInstance";
 import AuthContext from "authContext";
 import Spinner from "components/Spinner";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Footer from "examples/Footer";
 
 function TicketInformation({ isUpcoming }) {
   const { authenticated, currentUser } = useContext(AuthContext);
@@ -142,6 +144,7 @@ function TicketInformation({ isUpcoming }) {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       <Card id="delete-account">
         <MDBox pt={1} pb={2} px={2}>
           {loading === true ? (
@@ -189,6 +192,7 @@ function TicketInformation({ isUpcoming }) {
           )}
         </MDBox>
       </Card>
+      <Footer />
     </DashboardLayout>
   );
 }

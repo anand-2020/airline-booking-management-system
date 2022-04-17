@@ -47,7 +47,7 @@ function Footer({ company, links }) {
       width="100%"
       display="flex"
       flexDirection={{ xs: "column", lg: "row" }}
-      justifyContent="space-between"
+      justifyContent="center"
       alignItems="center"
       px={1.5}
     >
@@ -56,42 +56,21 @@ function Footer({ company, links }) {
         justifyContent="center"
         alignItems="center"
         flexWrap="wrap"
-        color="text"
+        color={"text"}
         fontSize={size.sm}
-        px={1.5}
       >
-        &copy; {new Date().getFullYear()}, made with
-        <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
-          <Icon color="inherit" fontSize="inherit">
-            favorite
-          </Icon>
-        </MDBox>
-        by
-        <Link href={href} target="_blank">
-          <MDTypography variant="button" fontWeight="medium">
-            &nbsp;{name}&nbsp;
+        &copy; {new Date().getFullYear()}, made with pain by
+        {/* <MDBox fontSize={size.md} color={light ? "white" : "dark"} mb={-0.5} mx={0.25}>
+              <Icon color="inherit" fontSize="inherit">
+                favorite
+              </Icon>
+            </MDBox> */}
+        <Link href="" target="_blank">
+          <MDTypography variant="button" fontWeight="medium" color={"dark"}>
+            &nbsp;Anand, Divyansh & Rahul&nbsp;
           </MDTypography>
         </Link>
-        for a better web.
-      </MDBox>
-      <MDBox
-        component="ul"
-        sx={({ breakpoints }) => ({
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          listStyle: "none",
-          mt: 3,
-          mb: 0,
-          p: 0,
-
-          [breakpoints.up("lg")]: {
-            mt: 0,
-          },
-        })}
-      >
-        {renderLinks()}
+        for petty grades.
       </MDBox>
     </MDBox>
   );

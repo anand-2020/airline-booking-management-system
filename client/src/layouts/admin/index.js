@@ -29,7 +29,7 @@ import Transactions from "layouts/admin/components/Transactions";
 function Billing() {
   return (
     <DashboardLayout>
-      {/* <DashboardNavbar absolute isMini /> */}
+      <DashboardNavbar />
       <MDBox mt={3} mb={3}>
         <Grid container spacing={3}>
           <Grid item lg={12} xs={12}>

@@ -29,6 +29,7 @@ import MDButton from "components/MDButton";
 import { useMaterialUIController } from "context";
 import Grid from "@mui/material/Grid";
 import { Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Ticket({
   srcId,
@@ -43,6 +44,22 @@ function Ticket({
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+  const navigate = useNavigate();
+
+  const navigateToBooking = () => {
+    navigate("/bookFlight", {
+      state: {
+        srcId,
+        srcCity,
+        destId,
+        destCity,
+        departure,
+        arrival,
+        duration,
+        fare,
+      },
+    });
+  };
 
   return (
     <MDBox
@@ -58,7 +75,7 @@ function Ticket({
         display="flex"
         justifyContent="center"
         alignItems="center"
-        spacing={3}
+        spacing={{ lg: 3, md: 1 }}
         // mx="auto"
       >
         <Grid
@@ -99,6 +116,7 @@ function Ticket({
               {duration}
             </MDTypography>
           </Divider>
+          &nbsp;&nbsp;
           {/* </Stack> */}
         </Grid>
 
@@ -143,7 +161,12 @@ function Ticket({
           alignItems="center"
           flexDirection={"column"}
         >
-          <MDButton variant="contained" color="primary" size="large">
+          <MDButton
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={navigateToBooking}
+          >
             <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
           </MDButton>
         </Grid>
