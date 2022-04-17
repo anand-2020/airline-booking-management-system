@@ -112,8 +112,13 @@ function TicketInformation(props) {
                   arrival={moment.utc(flight.ARR_TS).format("HH:mm")}
                   duration={flight.DURATION}
                   fare={flight.TICKET_PRICE}
-                  flightId={flight.FLIGHT_ID}
+                  flightDateId={flight.FLIGHT_DATE_ID}
                   delay={flight.DELAYED_BY}
+                  departureDate={moment(flight.DEP_TS.substring(0, 10)).format(
+                    "DD/MM/YY"
+                  )}
+                  numRows={flight.NUM_ROWS}
+                  numCols={flight.NUM_COLS}
                 />
               ))}
             </MDBox>

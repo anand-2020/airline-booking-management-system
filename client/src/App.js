@@ -158,7 +158,7 @@ export default function App() {
     });
 
   const navbarRoutes = routes.filter(
-    (el) => el.key !== "signup" && el.key !== "signin"
+    (el) => el.key !== "signup" && el.key !== "signin" && el.key !== "book"
   );
 
   return (

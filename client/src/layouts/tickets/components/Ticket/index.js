@@ -40,7 +40,11 @@ function Ticket({
   arrival,
   duration,
   fare,
+  flightDateId,
   noGutter,
+  departureDate,
+  numRows,
+  numCols,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -57,6 +61,10 @@ function Ticket({
         arrival,
         duration,
         fare,
+        departureDate,
+        flightDateId,
+        numRows,
+        numCols,
       },
     });
   };
