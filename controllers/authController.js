@@ -18,8 +18,8 @@ const signToken = (id) => {
 };
 
 const createSendToken = (user, statusCode, res) => {
-  // console.log(user);
-  const token = signToken(user.id);
+  //console.log(user);
+  const token = signToken(user.CUSTOMER_ID);
   // console.log(token);
   const cookieOptions = {
     expires: new Date(Date.now() + JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -53,7 +53,6 @@ export const protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-  // console.log("safsfsa");
   if (!token) {
     return next(new AppError("You are not logged in", 401));
   }
@@ -61,8 +60,9 @@ export const protect = catchAsync(async (req, res, next) => {
   if (!decoded) throw new AppError("Your Password or email is Wrong");
 
   const user = await db.executeQuery(
-    `SELECT * FROM CUSTOMERS WHERE CUSTOMER_ID=${decoded.id}`
+    `SELECT * FROM CUSTOMERS WHERE CUSTOMER_ID = '${decoded.id}'`
   );
+  // console.log(user.data);
   if (!user.data.length) {
     return new AppError(
       "The user belonging to this token does no longer exist.",
@@ -70,7 +70,7 @@ export const protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  req.user = user;
+  req.user = user.data[0];
 
   next();
 });
@@ -109,7 +109,7 @@ export const login = catchAsync(async (req, res, next) => {
   const user = await db.executeQuery(
     `SELECT * FROM CUSTOMERS WHERE EMAIL_ID='${email}'`
   );
-  console.log(user);
+  //console.log(user);
   //1) find the user
   if (!user.data.length)
     throw new AppError("Your email or password is wrong.", 401);

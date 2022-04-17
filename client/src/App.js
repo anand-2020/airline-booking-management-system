@@ -77,8 +77,9 @@ export default function App() {
     axios
       .get("auth/isLoggedIn")
       .then((res) => {
-        console.log(res.data);
-        // setCurrentUser(res.data.data.user);
+        // console.log("checking logged in status");
+        // console.log(res.data);
+        setCurrentUser(res.data.data.user);
         setAuthenticated(true);
         setLoading(false);
       })
