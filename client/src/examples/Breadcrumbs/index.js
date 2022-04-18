@@ -35,7 +35,8 @@ function Breadcrumbs({ icon, title, route, light }) {
       <MuiBreadcrumbs
         sx={{
           "& .MuiBreadcrumbs-separator": {
-            color: ({ palette: { white, grey } }) => (light ? white.main : grey[600]),
+            color: ({ palette: { white, grey } }) =>
+              light ? white.main : grey[600],
           },
         }}
       >
@@ -78,7 +79,7 @@ function Breadcrumbs({ icon, title, route, light }) {
       <MDTypography
         fontWeight="bold"
         textTransform="capitalize"
-        variant="h6"
+        variant="h5"
         color={light ? "white" : "dark"}
         noWrap
       >

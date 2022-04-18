@@ -39,7 +39,7 @@ import MDButton from "components/MDButton";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/sign-in/5.jpg";
 import axios from "axiosInstance";
 import AuthContext from "authContext";
 import Spinner from "components/Spinner";
@@ -47,7 +47,8 @@ import Spinner from "components/Spinner";
 function Basic() {
   const [emailVal, setEmailVal] = useState("");
   const [passVal, setPassVal] = useState("");
-  const { authenticated, updateAuthData } = useContext(AuthContext);
+  const { authenticated, updateAuthData, currentUser, canRead, canWrite } =
+    useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const handleSignIn = () => {
@@ -66,6 +67,11 @@ function Basic() {
           res.data.data.user.ROLE === "W" || res.data.data.user.ROLE === "R",
           res.data.data.user.ROLE === "W"
         );
+        // console.log(
+        //   res.data.data.user,
+        //   res.data.data.user.ROLE === "W" || res.data.data.user.ROLE === "R",
+        //   res.data.data.user.ROLE === "W"
+        // );
         setLoading(false);
       })
       .catch((err) => {

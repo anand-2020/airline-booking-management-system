@@ -43,6 +43,7 @@ import { IconButton, Divider } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
 import Icon from "@mui/material/Icon";
+import backgroundImage from "assets/images/destinations/BOM.jpg";
 
 function Ticket({
   ticketId,
@@ -73,15 +74,14 @@ function Ticket({
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-
   const toPdf = new (function () {
     this.printPage = function () {
       let style = `
       <style>
-    body {
-      background: none;
-      font-family: helvetica, arial;
-      text-transform: uppercase;
+      body {
+        background: none;
+        font-family: helvetica, arial;
+        text-transform: uppercase;
       box-sizing: border-box;
       width: 100vw;
     }
@@ -401,7 +401,7 @@ function Ticket({
           />
         </div>
         <img
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/281813/hkg.jpg"
+          src="https://github.com/anand-2020/airline-booking-management-system/blob/fee1b01493fca49f009fe80c27f0dbcefe6ffcd3/client/src/assets/images/destinations/${destId}.jpg"
           alt=""
           class="dest_img"
         />
@@ -444,13 +444,13 @@ function Ticket({
         </div>
         <div class="seating_seat">
           <h2>Seat</h2>
-          <h3>1A/1B</h3>
+          <h3>${seat}</h3>
         </div>
       </div>
       <div class="card_details">
         <div class="details_flight">
           <h2>Flight</h2>
-          <h3>TR2063</h3>
+          <h3>${flightId}</h3>
         </div>
         <div class="details_date">
           <h2>Depart</h2>

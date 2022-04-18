@@ -60,8 +60,20 @@ function TicketInformation(props) {
     // <Card id="delete-account">
     <>
       {props.flights.length === 0 ? (
-        <MDBox pt={3} px={2} sx={{ display: "flex", justifyContent: "center" }}>
-          <MDTypography variant="h3">Ummm... No flights :(</MDTypography>
+        <MDBox
+          pt={3}
+          px={2}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <MDTypography variant="h3">Welcome!</MDTypography>
+          <MDTypography variant="h4" fontWeight="light">
+            Book your next flight NOW.
+          </MDTypography>
         </MDBox>
       ) : (
         <>
@@ -119,6 +131,7 @@ function TicketInformation(props) {
                   )}
                   numRows={flight.NUM_ROWS}
                   numCols={flight.NUM_COLS}
+                  flightId={flight.FLIGHT_ID}
                 />
               ))}
             </MDBox>

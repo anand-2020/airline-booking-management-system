@@ -81,6 +81,10 @@ export default function App() {
         // console.log(res.data);
         setCurrentUser(res.data.data.user);
         setAuthenticated(true);
+        setCanRead(
+          res.data.data.user.ROLE === "W" || res.data.data.user.ROLE === "R"
+        );
+        setCanWrite(res.data.data.user.ROLE === "W");
         setLoading(false);
       })
       .catch((err) => {
@@ -93,9 +97,11 @@ export default function App() {
     checkAuthentication();
   }, []);
 
-  const updateAuthData = (isAuthenticated, user) => {
+  const updateAuthData = (isAuthenticated, user, read, write) => {
     setCurrentUser(user);
     setAuthenticated(isAuthenticated);
+    setCanRead(read);
+    setCanWrite(write);
   };
 
   // Open sidenav when mouse enter on mini sidenav

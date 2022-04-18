@@ -25,7 +25,6 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import DataTable from "examples/Tables/DataTable";
 import MDButton from "components/MDButton";
 import { EventSeat, EventSeatOutlined } from "@mui/icons-material";
 import { Divider, IconButton } from "@mui/material";
@@ -35,12 +34,12 @@ import MDInput from "components/MDInput";
 
 import { useEffect, useState, useContext } from "react";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import Spinner from "components/Spinner";
 import axios from "axiosInstance";
 import AuthContext from "authContext";
+import Header from "./components/Ticket";
 
-const passengerSeatMap = new Map();
 const Tables = () => {
   const location = useLocation();
   const [seatData, setSeatData] = useState([[]]);
@@ -48,38 +47,46 @@ const Tables = () => {
   const [loading, setLoading] = useState(true);
   const [cost, setCost] = useState(0);
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const disablePay = () => {
+    let shouldDisable = false;
+    for (let i = 0; i < passengerDetails.length; i++) {
+      if (
+        cost === 0 ||
+        passengerDetails[i].age === null ||
+        passengerDetails[i].age <= 0 ||
+        passengerDetails[i].name === ""
+      ) {
+        shouldDisable = true;
+        break;
+      }
+    }
+    if (passengerDetails.length === 0) shouldDisable = true;
+    return shouldDisable;
+  };
 
   const addPassenger = (row, col) => {
-    // console.log(row, col);
-    row = row - 1;
     const curr = new Array(passengerDetails.length);
     for (let i = 0; i < curr.length; i++) curr[i] = { ...passengerDetails[i] };
-    // console.log(`${row}${getLetter(col)}`, curr.length);
-    passengerSeatMap.set(`${row}${getLetter(col)}`, curr.length);
-    // console.log(passengerSeatMap.get(`${row}${getLetter(col)}`));
     curr.push({
-      name: null,
+      name: "",
       age: null,
       seatNumber: `${row}${getLetter(col)}`,
       row: row,
       col: col,
-      // idx: curr.length,
     });
     setPassengerDetails(curr);
-    row++;
   };
 
   const removePassenger = (row, col) => {
-    // console.log(row, col);
-    // console.log(`${row}${getLetter(col)}`);
-    row = row - 1;
     const curr = new Array(passengerDetails.length);
     for (let i = 0; i < curr.length; i++) curr[i] = { ...passengerDetails[i] };
-    // console.log(passengerSeatMap.get(`${row}${getLetter(col)}`));
-    curr.splice(passengerSeatMap.get(`${row}${getLetter(col)}`), 1);
-    passengerSeatMap.delete(`${row}${getLetter(col)}`);
+    curr.splice(
+      curr.findIndex((el) => el.seatNumber === `${row}${getLetter(col)}`),
+      1
+    );
     setPassengerDetails(curr);
-    row++;
   };
 
   const getLetter = (num) => {
@@ -134,7 +141,7 @@ const Tables = () => {
         PASSENGER_NAME: passengerDetails[i].name,
         PASSENGER_AGE: passengerDetails[i].age,
         FARE: location?.state?.fare,
-        ROW_NUM: passengerDetails[i].row + 1,
+        ROW_NUM: passengerDetails[i].row,
         COL_NUM: passengerDetails[i].col,
       };
     }
@@ -147,6 +154,7 @@ const Tables = () => {
       .then((res) => {
         setLoading(false);
         console.log(res);
+        navigate("/upcoming-journeys", { state: {} });
       })
       .catch((err) => {
         setLoading(false);
@@ -184,97 +192,6 @@ const Tables = () => {
       });
   }, []);
 
-  const flightDetails = (
-    <Grid
-      container
-      // component="li"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      spacing={3}
-      // mx="auto"
-    >
-      <Grid
-        item
-        lg={2}
-        sm={3}
-        xs={7}
-        display="flex"
-        alignItems="center"
-        flexDirection={"column"}
-      >
-        {/* <MDBox borderColor={"black"} border={"2px"}> */}
-        {/* <Stack spacing={0} textAlign="center"> */}
-        <MDTypography color="white" fontWeight="medium">
-          {"DEL"}
-        </MDTypography>
-        <MDTypography color="white" variant="h4" fontWeight="bold">
-          {"10:40"}
-        </MDTypography>
-        <MDTypography color="white" variant="h6" fontWeight="light">
-          {"Delhi"}
-        </MDTypography>
-        {/* </Stack> */}
-        {/* </MDBox> */}
-      </Grid>
-
-      <Grid
-        item
-        lg={2}
-        sm={3}
-        xs={7}
-        display="flex"
-        alignItems="center"
-        flexDirection={"column"}
-        justifyContent={"center"}
-      >
-        {/* <Stack spacing={0} textAlign="center"> */}
-        {/* <Divider flexItem> */}
-        <MDTypography color="white" variant="h6" fontWeight="medium">
-          {"2h40m"}
-        </MDTypography>
-        {/* </Divider> */}
-        {/* </Stack> */}
-      </Grid>
-
-      <Grid
-        item
-        lg={2}
-        sm={3}
-        xs={7}
-        display="flex"
-        alignItems="center"
-        flexDirection={"column"}
-      >
-        {/* <Stack spacing={0} textAlign="center"> */}
-        <MDTypography color="white" fontWeight="medium">
-          {"HYD"}
-        </MDTypography>
-        <MDTypography color="white" variant="h4" fontWeight="bold">
-          {"13:10"}
-        </MDTypography>
-        <MDTypography color="white" variant="h6" fontWeight="light">
-          {"Hyderabad"}
-        </MDTypography>
-        {/* </Stack> */}
-      </Grid>
-
-      <Grid
-        item
-        lg={2}
-        sm={3}
-        xs={7}
-        display="flex"
-        alignItems="center"
-        flexDirection={"column"}
-      >
-        <MDTypography color="white" fontWeight="bold">
-          &#8377;{"6500"}
-        </MDTypography>
-      </Grid>
-    </Grid>
-  );
-
   const seatMap = (
     <Grid
       spacing={1}
@@ -284,11 +201,16 @@ const Tables = () => {
       flexDirection="column"
       mx="auto"
       alignItems={"center"}
-      s
+      sx={{
+        backgroundColor: "#F8F8F8",
+        borderRadius: "5%",
+        boxShadow: "20px 20px",
+      }}
     >
-      <Grid item display="flex" spacing={1}>
-        <MDTypography fontWeight="bold">PILOT</MDTypography>
+      <Grid item display="flex" spacing={1} mt={3}>
+        <MDTypography fontWeight="bold">P I L O T</MDTypography>
       </Grid>
+
       {seatData.map((dataRow, rowIdx) => (
         <Grid item display="flex" spacing={1} key={rowIdx}>
           {dataRow.map((data, colIdx) => (
@@ -417,18 +339,30 @@ const Tables = () => {
         <MDBox pt={6} pb={3}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <Card>
+              <Card sx={{ backgroundColor: "#FFFFFF" }}>
                 <MDBox
                   mx={2}
                   mt={-3}
-                  py={3}
+                  py={1}
                   px={2}
                   variant="gradient"
                   bgColor="info"
                   borderRadius="lg"
                   coloredShadow="info"
                 >
-                  {flightDetails}
+                  <Header
+                    srcId={location?.state?.srcId}
+                    destId={location?.state?.destId}
+                    destCity={location?.state?.destCity}
+                    departure={location?.state?.departure}
+                    arrival={location?.state?.arrival}
+                    duration={location?.state?.duration}
+                    fare={location?.state?.fare}
+                    departureDate={location?.state?.departureDate}
+                    flightId={location?.state?.flightId}
+                    srcCity={location?.state?.srcCity}
+                  />
+                  {/* {flightDetails} */}
                 </MDBox>
                 <MDBox pt={3}></MDBox>
                 <Grid
@@ -464,19 +398,36 @@ const Tables = () => {
                   <Grid item md={6} xs={12}>
                     {passengerDetailsInputs}
                   </Grid>
-                  <Grid item>
+                  <Grid
+                    item
+                    display={"flex"}
+                    spacing={1}
+                    justifyContent={"center"}
+                  >
                     {loading ? (
                       <Spinner />
                     ) : (
-                      <MDButton
-                        variant="contained"
-                        color={cost === 0 ? "secondary" : "success"}
-                        size="large"
-                        disabled={cost === 0}
-                        onClick={bookTickets}
-                      >
-                        {`PAY: `} &#8377;{`${cost}`}
-                      </MDButton>
+                      <>
+                        <MDButton
+                          variant="contained"
+                          color={disablePay() ? "secondary" : "success"}
+                          size="large"
+                          disabled={disablePay()}
+                          onClick={bookTickets}
+                        >
+                          {`PAY: `} &#8377;{`${cost}`}
+                        </MDButton>
+                        &nbsp;
+                        <MDButton
+                          variant="contained"
+                          color={"error"}
+                          size="large"
+                          disabled={loading}
+                          onClick={() => navigate(-1)}
+                        >
+                          CANCEL
+                        </MDButton>
+                      </>
                     )}
                   </Grid>
                   <Grid

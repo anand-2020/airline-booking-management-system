@@ -30,6 +30,8 @@ import { useMaterialUIController } from "context";
 import Grid from "@mui/material/Grid";
 import { Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "authContext";
+import { useContext } from "react";
 
 function Ticket({
   srcId,
@@ -45,10 +47,12 @@ function Ticket({
   departureDate,
   numRows,
   numCols,
+  flightId,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const navigate = useNavigate();
+  const { canWrite } = useContext(AuthContext);
 
   const navigateToBooking = () => {
     navigate("/bookFlight", {
@@ -65,6 +69,7 @@ function Ticket({
         flightDateId,
         numRows,
         numCols,
+        flightId,
       },
     });
   };
@@ -90,7 +95,7 @@ function Ticket({
           item
           lg={2}
           sm={3}
-          xs={7}
+          xs={12}
           display="flex"
           alignItems="center"
           flexDirection={"column"}
@@ -112,7 +117,7 @@ function Ticket({
           item
           lg={2}
           sm={3}
-          xs={7}
+          xs={12}
           display="flex"
           alignItems="center"
           flexDirection={"column"}
@@ -132,7 +137,7 @@ function Ticket({
           item
           lg={2}
           sm={3}
-          xs={7}
+          xs={12}
           display="flex"
           alignItems="center"
           flexDirection={"column"}
@@ -152,7 +157,7 @@ function Ticket({
           item
           lg={2}
           sm={3}
-          xs={7}
+          xs={12}
           display="flex"
           alignItems="center"
           flexDirection={"column"}
@@ -161,22 +166,53 @@ function Ticket({
         </Grid>
 
         <Grid
+          container
           item
           lg={2}
-          sm={3}
-          xs={7}
+          md={12}
+          sm={12}
+          xs={12}
+          // sm={12}
           display="flex"
           alignItems="center"
-          flexDirection={"column"}
+          justifyContent={"center"}
+          spacing={1}
         >
-          <MDButton
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={navigateToBooking}
-          >
-            <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
-          </MDButton>
+          <Grid item md={4} lg={12}>
+            <MDButton
+              variant="contained"
+              color="primary"
+              size={canWrite == true ? "small" : "large"}
+              onClick={navigateToBooking}
+            >
+              <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
+            </MDButton>
+          </Grid>
+          {canWrite == true && (
+            <Grid item md={4} lg={12}>
+              <MDButton
+                variant="contained"
+                color="warning"
+                size={canWrite === true ? "small" : "large"}
+                onClick={navigateToBooking}
+              >
+                <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;DELAY
+              </MDButton>
+            </Grid>
+          )}
+
+          {canWrite == true && (
+            <Grid item md={4} lg={12}>
+              <MDButton
+                variant="contained"
+                color="error"
+                size={canWrite == true ? "small" : "large"}
+                onClick={navigateToBooking}
+              >
+                <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;CANCEL
+              </MDButton>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </MDBox>

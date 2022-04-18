@@ -44,7 +44,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 import moment from "moment";
 
 // Images
-import backgroundImage from "assets/images/welcome-page/3.jpg";
+import backgroundImage from "assets/images/sign-in/17.jpg";
 import MDButton from "components/MDButton";
 
 import TicketInformation from "../../../tickets/components/TicketInformation";
@@ -97,11 +97,11 @@ function Header({ children, airports }) {
             palette: { gradients },
           }) =>
             `${linearGradient(
-              rgba(gradients.info.main, 0.6),
-              rgba(gradients.info.state, 0.6)
+              rgba(gradients.dark.main, 0.6),
+              rgba(gradients.dark.state, 0.6)
             )}, url(${backgroundImage})`,
           backgroundSize: "cover",
-          backgroundPosition: "50%",
+          backgroundPosition: "0px -80px",
           overflow: "hidden",
         }}
       >
