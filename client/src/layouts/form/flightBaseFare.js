@@ -14,45 +14,26 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CountryCode from "layouts/form/data/countryCode.js";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import axios from "axiosInstance";
 import Spinner from "components/Spinner";
 import MDTypography from "components/MDTypography";
 
 const theme = createTheme();
 
-export default function LeaseDate({
-  flightID,
-  leaseDate,
-  updateLeaseDate,
-  handleClose,
-}) {
-  const [dateValue, setDateValue] = useState(new Date(leaseDate));
+export default function BaseFare({ flightID, fare, updateFare, handleClose }) {
+  const [baseFare, setBaseFare] = useState(fare);
   const [loading, setLoading] = useState(false);
-
-  const handleDateChange = (newDate) => {
-    setDateValue(newDate);
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
 
-    const dateString = new Date(
-      new Date(dateValue).getTime() -
-        new Date(dateValue).getTimezoneOffset() * 60000
-    )
-      .toISOString()
-      .split("T")[0];
-
     axios
-      .patch(`flight/${flightID}`, { CONTINUED_TILL: dateString })
+      .patch(`flight/${flightID}`, { BASE_FARE: baseFare })
       .then((res) => {
         console.log(res);
         setLoading(false);
-        updateLeaseDate(dateString);
+        updateFare(baseFare);
         handleClose();
       })
       .catch((err) => {
@@ -61,6 +42,10 @@ export default function LeaseDate({
         handleClose();
       });
   };
+
+  //   useEffect(() => {
+  //     console.log(fare);
+  //   }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -97,21 +82,18 @@ export default function LeaseDate({
                 alignItems="center"
                 justifyContent={"center"}
               >
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    inputFormat="dd/MM/yyyy"
-                    value={dateValue}
-                    onChange={handleDateChange}
-                    minDate={new Date()}
-                    // defaultValue={dateValue}
-                    label="Lease Date"
-                    id="leaseDate"
-                    name="leaseDate"
-                    renderInput={(params) => (
-                      <TextField fullWidth required {...params} />
-                    )}
+                <Grid item xs={12}>
+                  <TextField
+                    name="baseFare"
+                    required
+                    fullWidth
+                    id="baseFare"
+                    label="Base Fare"
+                    type="number"
+                    value={baseFare}
+                    onChange={(e) => setBaseFare(e.target.value)}
                   />
-                </LocalizationProvider>
+                </Grid>
               </Grid>
             </Grid>
             {loading === true ? (

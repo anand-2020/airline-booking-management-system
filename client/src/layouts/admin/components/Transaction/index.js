@@ -32,12 +32,46 @@ import { useState } from "react";
 import Dialog from "layouts/dialog";
 import FlightDays from "layouts/form/flightDays";
 import LeaseDate from "layouts/form/leaseDate";
+import BaseFare from "layouts/form/flightBaseFare";
 
-function Transaction({ color, icon, flightID, description, value }) {
+function Transaction({
+  color,
+  icon,
+  flightID,
+  baseFare,
+  daysString,
+  deptTime,
+  destLoc,
+  destID,
+  duration,
+  leaseExpiry,
+  seatMap,
+  srcLoc,
+  srcID,
+}) {
   const [collapsed, setCollapsed] = useState(false);
+  const [weekDays, setWeekDays] = useState(daysString);
+  const [leaseExpiryDate, setLeaseExpiryDate] = useState(leaseExpiry);
+  const [fare, setFare] = useState(baseFare);
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
+  };
+
+  const updateWeekDays = (newDaysString) => {
+    setWeekDays(newDaysString);
+  };
+
+  const updateLeaseExpiryDate = (newDate) => {
+    setLeaseExpiryDate(newDate);
+  };
+
+  const updateFare = (newFare) => {
+    setFare(newFare);
+  };
+
+  const getLocation = (address) => {
+    return address.split(",")[1] + "," + address.split(",")[2];
   };
 
   const flightDetails = (
@@ -62,7 +96,8 @@ function Transaction({ color, icon, flightID, description, value }) {
           SRC -&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          Delhi, India - DEL
+          {`${getLocation(srcLoc)} `}
+          {/* {srcLoc} */}
         </MDTypography>
       </Grid>
       <Grid
@@ -78,7 +113,8 @@ function Transaction({ color, icon, flightID, description, value }) {
           DEST -&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          Hyderabad, India - HYD
+          {`${getLocation(destLoc)} `}
+          {/* {destLoc} */}
         </MDTypography>
       </Grid>
 
@@ -95,7 +131,7 @@ function Transaction({ color, icon, flightID, description, value }) {
           Duration -&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          2h 20min
+          {`${duration.substring(0, 2)}hr ${duration.substring(3, 5)}min`}
         </MDTypography>
       </Grid>
       <Grid
@@ -111,7 +147,7 @@ function Transaction({ color, icon, flightID, description, value }) {
           Departure Time -&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          13:40
+          {deptTime.substring(0, 5)}
         </MDTypography>
       </Grid>
       <Grid
@@ -127,7 +163,13 @@ function Transaction({ color, icon, flightID, description, value }) {
           Lease Expires On -&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          13/10/2030
+          {new Date(
+            new Date(leaseExpiryDate).getTime() -
+              new Date(leaseExpiryDate).getTimezoneOffset() * 60 * 1000
+          )
+            .toISOString()
+            .split("T")[0]
+            .substring(0, 10)}
         </MDTypography>
         &nbsp;
         <Dialog
@@ -144,7 +186,13 @@ function Transaction({ color, icon, flightID, description, value }) {
             </IconButton>
           }
         >
-          <LeaseDate />
+          <LeaseDate
+            flightID={flightID}
+            leaseDate={leaseExpiryDate}
+            updateLeaseDate={(newDate) => {
+              updateLeaseExpiryDate(newDate);
+            }}
+          />
         </Dialog>
       </Grid>
       <Grid
@@ -160,8 +208,47 @@ function Transaction({ color, icon, flightID, description, value }) {
           Seat Map -&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          8 X 5
+          {seatMap}
         </MDTypography>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={4}
+        display="flex"
+        alignItems="center"
+        justifyContent={"center"}
+      >
+        <MDTypography fontWeight="bold" fontSize="medium">
+          Base Fare -&nbsp;
+        </MDTypography>
+        <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
+          &#8377; {fare}
+        </MDTypography>
+        &nbsp;
+        <Dialog
+          title="Edit Base Fare"
+          action={
+            <IconButton
+              variant="outlined"
+              color={color}
+              iconOnly
+              circular
+              size="small"
+            >
+              <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+            </IconButton>
+          }
+        >
+          <BaseFare
+            flightID={flightID}
+            fare={fare}
+            updateFare={(newFare) => {
+              updateFare(newFare);
+            }}
+          />
+        </Dialog>
       </Grid>
     </Grid>
   );
@@ -191,28 +278,58 @@ function Transaction({ color, icon, flightID, description, value }) {
             </MDButton>
           </MDBox>
           <MDBox display="flex" flexDirection="column">
-            <MDTypography
-              variant="button"
-              fontWeight="medium"
-              gutterBottom
-              variant="h4"
-            >
+            <MDTypography fontWeight="medium" variant="h4" gutterBottom>
               {flightID}
             </MDTypography>
             <MDTypography variant="caption" color="text" fontWeight="regular">
-              {description}
+              {`${srcID} - ${destID}`}
             </MDTypography>
           </MDBox>
         </Grid>
         <Grid item alignItems="center" ml={{ sm: 0, xs: 2 }}>
           <Stack direction="row" spacing={1}>
-            <Chip label="S" color="secondary" variant="outlined" size="small" />
-            <Chip label="M" color="secondary" variant="filled" size="small" />
-            <Chip label="T" color="secondary" variant="outlined" size="small" />
-            <Chip label="W" color="secondary" variant="outlined" size="small" />
-            <Chip label="T" color="secondary" variant="filled" size="small" />
-            <Chip label="F" color="secondary" variant="outlined" size="small" />
-            <Chip label="S" color="secondary" variant="outlined" size="small" />
+            <Chip
+              label="S"
+              color="secondary"
+              variant={weekDays[0] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
+            <Chip
+              label="M"
+              color="secondary"
+              variant={weekDays[1] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
+            <Chip
+              label="T"
+              color="secondary"
+              variant={weekDays[2] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
+            <Chip
+              label="W"
+              color="secondary"
+              variant={weekDays[3] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
+            <Chip
+              label="T"
+              color="secondary"
+              variant={weekDays[4] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
+            <Chip
+              label="F"
+              color="secondary"
+              variant={weekDays[5] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
+            <Chip
+              label="S"
+              color="secondary"
+              variant={weekDays[6] === "1" ? "filled" : "outlined"}
+              size="small"
+            />
             <Dialog
               title="Edit Flight Days"
               action={
@@ -227,7 +344,11 @@ function Transaction({ color, icon, flightID, description, value }) {
                 </IconButton>
               }
             >
-              <FlightDays />
+              <FlightDays
+                flightID={flightID}
+                daysString={weekDays}
+                updateWeekDays={(str) => updateWeekDays(str)}
+              />
             </Dialog>
           </Stack>
         </Grid>

@@ -27,7 +27,7 @@ import { getLinearProgressUtilityClass } from "@mui/material";
 
 const theme = createTheme();
 
-export default function FlightPath({ handleClose }) {
+export default function FlightPath({ addNewFlightPath, handleClose }) {
   const [airports, setAirports] = useState([]);
   const [flightId, setFlightId] = useState("");
   const [srcId, setSrcId] = useState("");
@@ -102,10 +102,11 @@ export default function FlightPath({ handleClose }) {
       .then((res) => {
         console.log(res.data);
         setLoading(false);
+        addNewFlightPath(data);
         handleClose();
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err);
         setLoading(false);
         handleClose();
       });

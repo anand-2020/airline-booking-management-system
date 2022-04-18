@@ -144,6 +144,13 @@ export const updateFlight = catchAsync(async (req, res, next) => {
       status: "success",
       data: resp.data[0],
     });
+  } else if (req.body.BASE_FARE) {
+    const query = `UPDATE FLIGHT_PATH SET BASE_FARE = ${req.body.BASE_FARE} WHERE FLIGHT_ID = '${flightId}'`;
+
+    await db.executeQuery(query);
+    res.status(200).json({
+      status: "success",
+    });
   }
 
   //   console.log(resp.data[0][func]);
