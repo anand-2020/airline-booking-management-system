@@ -53,9 +53,19 @@ export default function FlightDays({
     });
     //TODO: axios request
 
-    updateWeekDays(newDaysString);
-    setLoading(false);
-    handleClose();
+    axios
+      .patch(`flight/${flightID}`, { WEEK_DAYS: newDaysString })
+      .then((res) => {
+        console.log(res);
+        updateWeekDays(newDaysString);
+        setLoading(false);
+        handleClose();
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        handleClose();
+      });
   };
 
   useEffect(() => {

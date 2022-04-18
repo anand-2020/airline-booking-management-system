@@ -151,6 +151,15 @@ export const updateFlight = catchAsync(async (req, res, next) => {
     res.status(200).json({
       status: "success",
     });
+  } else if (req.body.WEEK_DAYS) {
+    resp = await db.executeQuery(
+      `CALL CHANGE_DAY_OF_WEEK_FLIGHT_DAY('${flightId}','${req.body.WEEK_DAYS}')`
+    );
+    console.log(res);
+
+    res.status(200).json({
+      status: "success",
+    });
   }
 
   //   console.log(resp.data[0][func]);

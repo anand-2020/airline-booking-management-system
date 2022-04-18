@@ -82,7 +82,7 @@ BEGIN
             SELECT *
             FROM FLIGHT_DAY
             WHERE FLIGHT_ID = FID
-            AND DAY_OF_WEEK = CONVERT(V_COUNTER, CHAR)
+            AND DAY_OF_WEEK = V_COUNTER
         ) THEN
             SIGNAL SQLSTATE '43001' SET MESSAGE_TEXT = 'CAN NOT CANCEL A FLIGHT FROM FLYING ON AN EXISTING DAY, YOU CAN CHANGE LEASE_DATE TO PERFORM THIS OPERATION';
         END IF;
@@ -96,10 +96,10 @@ BEGIN
                 SELECT *
                 FROM FLIGHT_DAY
                 WHERE FLIGHT_ID = FID
-                AND DAY_OF_WEEK = CONVERT(V_COUNTER, CHAR)
+                AND DAY_OF_WEEK = V_COUNTER
         ) THEN
             INSERT INTO FLIGHT_DAY
-            VALUES (FID, CONVERT(V_COUNTER, CHAR));
+            VALUES (FID, V_COUNTER);
             SET EXTRA_DAYS = (7 + V_COUNTER - DAYOFWEEK(UTC_DATE())) % 7;
             SET DEPDATE = DATE_ADD(UTC_DATE(), INTERVAL EXTRA_DAYS DAY);
             SET W_COUNTER = 0;
@@ -384,7 +384,7 @@ BEGIN
         WHILE V_COUNTER < V_MAX DO
             IF RIGHT(LEFT(WEEKS_AVAILABLE, V_COUNTER), 1) = '1' THEN
                 INSERT INTO FLIGHT_DAY
-                VALUES (FID, CONVERT(V_COUNTER, CHAR));
+                VALUES (FID, V_COUNTER);
             END IF;
             SET V_COUNTER = V_COUNTER + 1;
         END WHILE;
