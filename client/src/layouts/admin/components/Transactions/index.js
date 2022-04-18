@@ -50,6 +50,8 @@ function Transactions() {
   const [flightPaths, setFlightPaths] = useState([]);
   const [currPageFlightPaths, setCurrPageFlightPaths] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState(null);
+  const [flightIDs, setFlightIDs] = useState([]);
 
   const handlePageChange = (event, value) => {
     setCurrPage(value);
@@ -70,6 +72,18 @@ function Transactions() {
   //   { FLIGHT_ID: "AL458" },
   // ];
 
+  const searchFlight = () => {
+    const idx = flightIDs.indexOf(searchValue);
+    if (idx == -1) {
+      setCurrPage(1);
+      setCurrPageFlightPaths(flightPaths.slice(0, pageSize));
+    } else {
+      const pgNo = Math.ceil(idx / pageSize);
+      setCurrPage(pgNo);
+      setCurrPageFlightPaths(flightPaths.slice(idx, idx + pageSize));
+    }
+  };
+
   const getFlightPaths = () => {
     setLoading(true);
     axios
@@ -77,8 +91,13 @@ function Transactions() {
       .then((res) => {
         // console.log(res);
         setTotPages(Math.ceil(res.data.data.length / pageSize));
-        setFlightPaths(res.data.data);
-        setCurrPageFlightPaths(res.data.data.slice(0, pageSize));
+        const flightData = res.data.data.sort((a, b) =>
+          a.FLIGHT_ID.localeCompare(b.FLIGHT_ID)
+        );
+        setFlightIDs(flightData.map((f) => f.FLIGHT_ID));
+        setFlightPaths(flightData);
+        //console.log(flightData[0]);
+        setCurrPageFlightPaths(flightData.slice(0, pageSize));
         setLoading(false);
       })
       .catch((err) => {
@@ -106,15 +125,19 @@ function Transactions() {
         px={2}
       >
         <Autocomplete
-          options={currPageFlightPaths}
+          options={flightPaths}
           getOptionLabel={(option) => option.FLIGHT_ID}
           fullWidth
+          onInputChange={(event, newInputValue) => {
+            setSearchValue(newInputValue);
+          }}
           renderInput={(params) => (
             <MDInput {...params} placeholder="Flight ID" />
           )}
         />
-        <MDButton>
-          <Search />
+        &nbsp; &nbsp;
+        <MDButton variant="gradient" color="info" onClick={searchFlight}>
+          <Search variant="filled" />
           &nbsp;Search
         </MDButton>
       </MDBox>
