@@ -27,6 +27,7 @@ import { Divider, Tab, Tabs, Box, ButtonGroup, Button } from "@mui/material";
 // Billing page components
 import Ticket from "layouts/tickets/components/Ticket";
 import moment from "moment";
+import axios from "axiosInstance";
 
 function TicketInformation(props) {
   const [activeDate, setActiveDate] = React.useState(0);
@@ -132,6 +133,9 @@ function TicketInformation(props) {
                   numRows={flight.NUM_ROWS}
                   numCols={flight.NUM_COLS}
                   flightId={flight.FLIGHT_ID}
+                  cancelFlight={props.cancelFlight}
+                  addDelay={props.addDelay}
+                  delay={flight.DELAYED_BY}
                 />
               ))}
             </MDBox>

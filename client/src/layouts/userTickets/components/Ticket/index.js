@@ -76,6 +76,7 @@ function Ticket({
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+
   const toPdf = new (function () {
     this.printPage = function () {
       let style = `

@@ -78,7 +78,7 @@ export default function App() {
       .get("auth/isLoggedIn")
       .then((res) => {
         // console.log("checking logged in status");
-        // console.log(res.data);
+        console.log(res.data.data);
         setCurrentUser(res.data.data.user);
         setAuthenticated(true);
         setCanRead(
@@ -187,6 +187,7 @@ export default function App() {
             routes={navbarRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
+            type="collapse"
           />
         )}
         <Routes>

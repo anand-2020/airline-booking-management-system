@@ -204,7 +204,7 @@ const Tables = () => {
       sx={{
         backgroundColor: "#F8F8F8",
         borderRadius: "5%",
-        boxShadow: "20px 20px",
+        // boxShadow: "20px 20px",
       }}
     >
       <Grid item display="flex" spacing={1} mt={3}>
@@ -267,7 +267,7 @@ const Tables = () => {
         <Grid
           container
           spacing={3}
-          sx={{ overflowY: "scroll", maxHeight: "33vh" }}
+          // sx={{ overflowY: "scroll", maxHeight: "33vh" }}
         >
           {passengerDetails.length === 0 ? (
             <Grid item xs={12} md={12}>
@@ -361,6 +361,7 @@ const Tables = () => {
                     departureDate={location?.state?.departureDate}
                     flightId={location?.state?.flightId}
                     srcCity={location?.state?.srcCity}
+                    delay={location?.state?.delay}
                   />
                   {/* {flightDetails} */}
                 </MDBox>
@@ -389,47 +390,71 @@ const Tables = () => {
                       item
                       md={12}
                       xs={12}
-                      sx={{ maxHeight: "40vh", overflow: "scroll" }}
+                      // sx={{ maxHeight: "40vh", overflow: "scroll"}}
                     >
                       {seatMap}
                     </Grid>
                   </Grid>
 
-                  <Grid item md={6} xs={12}>
-                    {passengerDetailsInputs}
-                  </Grid>
                   <Grid
+                    container
                     item
-                    display={"flex"}
-                    spacing={1}
-                    justifyContent={"center"}
+                    md={6}
+                    xs={12}
+                    spacing={3}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
                   >
-                    {loading ? (
-                      <Spinner />
-                    ) : (
-                      <>
-                        <MDButton
-                          variant="contained"
-                          color={disablePay() ? "secondary" : "success"}
-                          size="large"
-                          disabled={disablePay()}
-                          onClick={bookTickets}
-                        >
-                          {`PAY: `} &#8377;{`${cost}`}
-                        </MDButton>
-                        &nbsp;
-                        <MDButton
-                          variant="contained"
-                          color={"error"}
-                          size="large"
-                          disabled={loading}
-                          onClick={() => navigate(-1)}
-                        >
-                          CANCEL
-                        </MDButton>
-                      </>
-                    )}
+                    <Grid
+                      item
+                      // lg={12} md={12}
+                    >
+                      {passengerDetailsInputs}
+                    </Grid>
+                    <Grid
+                      container
+                      item
+                      // lg={12}
+                      // md={12}
+                      sx={{ display: "flex", justifyContent: "center" }}
+                      spacing={1}
+                    >
+                      {loading ? (
+                        <Spinner />
+                      ) : (
+                        <>
+                          <Grid item>
+                            <MDButton
+                              variant="contained"
+                              color={disablePay() ? "secondary" : "success"}
+                              size="large"
+                              disabled={disablePay()}
+                              onClick={bookTickets}
+                            >
+                              {`PAY: `} &#8377;{`${cost}`}
+                            </MDButton>
+                          </Grid>
+                          {/* &nbsp; */}
+                          <Grid item>
+                            <MDButton
+                              variant="contained"
+                              color={"error"}
+                              size="large"
+                              disabled={loading}
+                              onClick={() => navigate(-1)}
+                            >
+                              CANCEL
+                            </MDButton>
+                          </Grid>
+                        </>
+                      )}
+                    </Grid>
                   </Grid>
+
                   <Grid
                     item
                     sm={12}
