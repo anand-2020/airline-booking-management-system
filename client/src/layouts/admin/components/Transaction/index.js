@@ -27,12 +27,13 @@ import { Chip, Stack, Grid, Divider, IconButton } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Collapse from "@mui/material/Collapse";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import Dialog from "layouts/dialog";
 import FlightDays from "layouts/form/flightDays";
 import LeaseDate from "layouts/form/leaseDate";
 import BaseFare from "layouts/form/flightBaseFare";
+import AuthContext from "authContext";
 
 function Transaction({
   color,
@@ -53,6 +54,7 @@ function Transaction({
   const [weekDays, setWeekDays] = useState(daysString);
   const [leaseExpiryDate, setLeaseExpiryDate] = useState(leaseExpiry);
   const [fare, setFare] = useState(baseFare);
+  const { canWrite } = useContext(AuthContext);
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -172,28 +174,30 @@ function Transaction({
             .substring(0, 10)}
         </MDTypography>
         &nbsp;
-        <Dialog
-          title="Edit Lease Date"
-          action={
-            <IconButton
-              variant="outlined"
-              color={color}
-              iconOnly
-              circular
-              size="small"
-            >
-              <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
-            </IconButton>
-          }
-        >
-          <LeaseDate
-            flightID={flightID}
-            leaseDate={leaseExpiryDate}
-            updateLeaseDate={(newDate) => {
-              updateLeaseExpiryDate(newDate);
-            }}
-          />
-        </Dialog>
+        {canWrite && (
+          <Dialog
+            title="Edit Lease Date"
+            action={
+              <IconButton
+                variant="outlined"
+                color={color}
+                iconOnly
+                circular
+                size="small"
+              >
+                <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+              </IconButton>
+            }
+          >
+            <LeaseDate
+              flightID={flightID}
+              leaseDate={leaseExpiryDate}
+              updateLeaseDate={(newDate) => {
+                updateLeaseExpiryDate(newDate);
+              }}
+            />
+          </Dialog>
+        )}
       </Grid>
       <Grid
         item
@@ -227,28 +231,30 @@ function Transaction({
           &#8377; {fare}
         </MDTypography>
         &nbsp;
-        <Dialog
-          title="Edit Base Fare"
-          action={
-            <IconButton
-              variant="outlined"
-              color={color}
-              iconOnly
-              circular
-              size="small"
-            >
-              <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
-            </IconButton>
-          }
-        >
-          <BaseFare
-            flightID={flightID}
-            fare={fare}
-            updateFare={(newFare) => {
-              updateFare(newFare);
-            }}
-          />
-        </Dialog>
+        {canWrite && (
+          <Dialog
+            title="Edit Base Fare"
+            action={
+              <IconButton
+                variant="outlined"
+                color={color}
+                iconOnly
+                circular
+                size="small"
+              >
+                <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+              </IconButton>
+            }
+          >
+            <BaseFare
+              flightID={flightID}
+              fare={fare}
+              updateFare={(newFare) => {
+                updateFare(newFare);
+              }}
+            />
+          </Dialog>
+        )}
       </Grid>
     </Grid>
   );
@@ -330,26 +336,28 @@ function Transaction({
               variant={weekDays[6] === "1" ? "filled" : "outlined"}
               size="small"
             />
-            <Dialog
-              title="Edit Flight Days"
-              action={
-                <IconButton
-                  variant="outlined"
-                  color={color}
-                  iconOnly
-                  circular
-                  size="small"
-                >
-                  <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
-                </IconButton>
-              }
-            >
-              <FlightDays
-                flightID={flightID}
-                daysString={weekDays}
-                updateWeekDays={(str) => updateWeekDays(str)}
-              />
-            </Dialog>
+            {canWrite && (
+              <Dialog
+                title="Edit Flight Days"
+                action={
+                  <IconButton
+                    variant="outlined"
+                    color={color}
+                    iconOnly
+                    circular
+                    size="small"
+                  >
+                    <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+                  </IconButton>
+                }
+              >
+                <FlightDays
+                  flightID={flightID}
+                  daysString={weekDays}
+                  updateWeekDays={(str) => updateWeekDays(str)}
+                />
+              </Dialog>
+            )}
           </Stack>
         </Grid>
         <Grid

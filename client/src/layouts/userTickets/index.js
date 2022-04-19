@@ -77,7 +77,11 @@ function TicketInformation({ isUpcoming }) {
       .then((res) => {
         // console.log("RES");
         console.log(res.data.data);
-        setTickets(res.data.data);
+        setTickets(
+          res.data.data.sort((a, b) =>
+            b.TIME_OF_BOOKING.localeCompare(a.TIME_OF_BOOKING)
+          )
+        );
         setLoading(false);
       })
       .catch((err) => {

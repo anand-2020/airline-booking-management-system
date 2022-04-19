@@ -72,7 +72,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Admin",
+    name: "Manage Flights",
     key: "admin",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/admin",

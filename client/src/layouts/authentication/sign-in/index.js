@@ -51,6 +51,16 @@ function Basic() {
     useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
+  const shouldDisable = () => {
+    return !(
+      emailVal.length !== "" &&
+      passVal.length >= 4 &&
+      emailVal.match(
+        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+      )
+    );
+  };
+
   const handleSignIn = () => {
     setLoading(true);
     axios
@@ -84,7 +94,7 @@ function Basic() {
     <>
       {authenticated === false ? (
         <BasicLayout image={bgImage}>
-          <Card>
+          <Card sx={{ width: { lg: "30vw", md: "60vw" } }}>
             <MDBox
               variant="gradient"
               bgColor="info"
@@ -114,11 +124,11 @@ function Basic() {
                     fullWidth
                     value={emailVal}
                     onChange={(e) => setEmailVal(e.target.value)}
-                    error={
-                      !emailVal.match(
-                        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-                      )
-                    }
+                    // error={
+                    //   !emailVal.match(
+                    //     /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+                    //   )
+                    // }
                   />
                 </MDBox>
                 <MDBox mb={2}>
@@ -128,7 +138,7 @@ function Basic() {
                     fullWidth
                     value={passVal}
                     onChange={(e) => setPassVal(e.target.value)}
-                    error={passVal.length < 4}
+                    // error={passVal.length < 4}
                   />
                 </MDBox>
                 <MDBox mt={4} mb={1}>
@@ -138,6 +148,7 @@ function Basic() {
                     disabled={loading}
                     fullWidth
                     onClick={handleSignIn}
+                    disabled={shouldDisable()}
                   >
                     {loading ? <Spinner color="dark" size={30} /> : "sign in"}
                   </MDButton>

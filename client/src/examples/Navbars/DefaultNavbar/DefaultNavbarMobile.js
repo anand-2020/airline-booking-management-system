@@ -45,12 +45,12 @@ function DefaultNavbarMobile({ open, close }) {
       MenuListProps={{ style: { width: `calc(${width}px - 4rem)` } }}
     >
       <MDBox px={0.5}>
-        <DefaultNavbarLink
+        {/* <DefaultNavbarLink
           icon="donut_large"
           name="search flights"
           route="/searchFlights"
         />
-        <DefaultNavbarLink icon="person" name="profile" route="/profile" />
+        <DefaultNavbarLink icon="person" name="profile" route="/profile" /> */}
         <DefaultNavbarLink
           icon="account_circle"
           name="sign up"

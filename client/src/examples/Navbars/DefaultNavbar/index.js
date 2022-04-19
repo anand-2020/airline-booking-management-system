@@ -119,7 +119,7 @@ function DefaultNavbar({ transparent, light, action }) {
           </MDTypography>
         </MDBox>
         <MDBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
-          <DefaultNavbarLink
+          {/* <DefaultNavbarLink
             icon="donut_large"
             name="search flights"
             route="/searchFlights"
@@ -130,7 +130,7 @@ function DefaultNavbar({ transparent, light, action }) {
             name="profile"
             route="/profile"
             light={light}
-          />
+          /> */}
           <DefaultNavbarLink
             icon="account_circle"
             name="sign up"

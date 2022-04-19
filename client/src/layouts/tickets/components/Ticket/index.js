@@ -198,7 +198,7 @@ function Ticket({
           {/* <Stack spacing={0} textAlign="center"> */}
           <Divider flexItem>
             <MDTypography variant="h6" fontWeight="medium">
-              {duration}
+              {`${duration.substring(0, 2)}hr ${duration.substring(3, 5)}min`}
             </MDTypography>
           </Divider>
           &nbsp;&nbsp;

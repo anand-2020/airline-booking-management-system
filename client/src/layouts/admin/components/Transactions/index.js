@@ -31,7 +31,7 @@ import MDInput from "components/MDInput";
 import { CardHeader, IconButton, Divider } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import MDButton from "components/MDButton";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import FlightPath from "layouts/form/flightPath";
 import Airport from "layouts/form/airport";
 import Dialog from "layouts/dialog";
@@ -52,6 +52,7 @@ function Transactions() {
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState(null);
   const [flightIDs, setFlightIDs] = useState([]);
+  const { canWrite } = useContext(AuthContext);
 
   const handlePageChange = (event, value) => {
     setCurrPage(value);
@@ -141,41 +142,44 @@ function Transactions() {
           &nbsp;Search
         </MDButton>
       </MDBox>
-      <MDBox
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        pt={3}
-        px={2}
-      >
-        <Dialog
-          title="Add New Flight Path"
-          action={
-            <MDButton variant="outlined" color="success">
-              <Add />
-              &nbsp;Add a new Flight Path
-            </MDButton>
-          }
+      {canWrite && (
+        <MDBox
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          pt={3}
+          px={2}
         >
-          <FlightPath
-            addNewFlightPath={(flightDetails) =>
-              addNewFlightPath(flightDetails)
+          <Dialog
+            title="Add New Flight Path"
+            action={
+              <MDButton variant="outlined" color="success">
+                <Add />
+                &nbsp;Add a new Flight Path
+              </MDButton>
             }
-          />
-        </Dialog>
-        &nbsp; &nbsp;
-        <Dialog
-          title="Add New Airport"
-          action={
-            <MDButton variant="outlined" color="success">
-              <Add />
-              &nbsp;Add a new Airport
-            </MDButton>
-          }
-        >
-          <Airport />
-        </Dialog>
-      </MDBox>
+          >
+            <FlightPath
+              addNewFlightPath={(flightDetails) =>
+                addNewFlightPath(flightDetails)
+              }
+            />
+          </Dialog>
+          &nbsp; &nbsp;
+          <Dialog
+            title="Add New Airport"
+            action={
+              <MDButton variant="outlined" color="success">
+                <Add />
+                &nbsp;Add a new Airport
+              </MDButton>
+            }
+          >
+            <Airport />
+          </Dialog>
+        </MDBox>
+      )}
+
       <Divider />
       <MDBox display="flex" justifyContent="center" alignItems="center">
         <Pagination

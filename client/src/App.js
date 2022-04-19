@@ -164,7 +164,13 @@ export default function App() {
     });
 
   const navbarRoutes = routes.filter(
-    (el) => el.key !== "signup" && el.key !== "signin" && el.key !== "book"
+    (el) =>
+      !(
+        el.key === "signup" ||
+        el.key === "signin" ||
+        el.key === "book" ||
+        (!canRead && el.key === "admin")
+      )
   );
 
   return (

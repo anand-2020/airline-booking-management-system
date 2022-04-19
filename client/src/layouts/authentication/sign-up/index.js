@@ -49,16 +49,16 @@ import AuthContext from "authContext";
 import Spinner from "components/Spinner";
 
 function Cover() {
-  const [gender, setGender] = React.useState();
-  const [countryCode, setCountryCode] = React.useState();
-  const [dateValue, setDateValue] = React.useState();
+  const [gender, setGender] = React.useState("M");
+  const [countryCode, setCountryCode] = React.useState("IN");
+  const [dateValue, setDateValue] = React.useState(new Date());
   const [emailVal, setEmailVal] = useState("");
   const [passVal, setPassVal] = useState("");
   const [nameVal, setNameVal] = useState("");
   const [usernameVal, setUsernameVal] = useState("");
   const [addressVal, setAddressVal] = useState("");
-  const [professionVal, setProfessionVal] = useState("Other");
-  const [roleVal, setRoleVal] = useState("");
+  const [professionVal, setProfessionVal] = useState("OTHER");
+  const [roleVal, setRoleVal] = useState("N");
   const [phoneVal, setPhoneVal] = useState("");
   const { authenticated, updateAuthData } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ function Cover() {
         PASSWORD: passVal,
         GENDER: gender,
         DOB: dateValue,
-        ROLE: "W",
+        ROLE: roleVal,
         PROFESSION: professionVal,
         COUNTRY_CODE: countryCode,
         PHONE_NO: phoneVal,
@@ -109,7 +109,11 @@ function Cover() {
     setCountryCode(event.target.value);
   };
 
-  const handleSubmit = () => {};
+  const handleRoleChange = (event) => {
+    setRoleVal(event.target.value);
+  };
+
+  // const handleSubmit = () => {};
 
   return (
     <>
@@ -181,7 +185,7 @@ function Cover() {
                       onChange={(e) => setNameVal(e.target.value)}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <MDInput
                       fullWidth
                       id="gender"
@@ -202,7 +206,7 @@ function Cover() {
                       ))}
                     </MDInput>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
                         // label="Date of Journey"
@@ -220,6 +224,27 @@ function Cover() {
                         )}
                       />
                     </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <MDInput
+                      fullWidth
+                      id="role"
+                      select
+                      SelectProps={{ native: true }}
+                      label="Role"
+                      value={roleVal}
+                      onChange={handleRoleChange}
+                    >
+                      {[
+                        { value: "N", label: "Customer" },
+                        { value: "R", label: "Admin" },
+                        { value: "W", label: "SuperAdmin" },
+                      ].map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </MDInput>
                   </Grid>
                   <Grid item xs={12}>
                     <MDInput
