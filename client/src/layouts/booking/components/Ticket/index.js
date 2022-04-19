@@ -59,6 +59,7 @@ function Ticket({
   numCols,
   noGutter,
   flightId,
+  delay,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -229,6 +230,12 @@ function Ticket({
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
           <MDTypography variant="h4" fontWeight="bold">
             {departure}
+          </MDTypography>
+          <MDTypography
+            variant="caption"
+            color={delay !== "00:00:00" ? "error" : "success"}
+          >
+            {delay !== "00:00:00" ? `Delayed by ${delay}` : `No delay`}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {srcCity}

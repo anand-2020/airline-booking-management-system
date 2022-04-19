@@ -134,6 +134,7 @@ function Ticket({
         numRows,
         numCols,
         flightId,
+        delay,
       },
     });
   };
@@ -173,9 +174,9 @@ function Ticket({
           </MDTypography>
           <MDTypography
             variant="caption"
-            color={delay !== "00:00:00" ? "error" : "secondary"}
+            color={delay !== "00:00:00" ? "error" : "success"}
           >
-            {`Delayed by ${delay}`}
+            {delay !== "00:00:00" ? `Delayed by ${delay}` : `No delay`}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {srcCity}
