@@ -45,6 +45,24 @@ function TicketInformation({ isUpcoming }) {
   const [open, setOpen] = useState(false);
   const [toDeleteTicketId, setToDeleteTicketId] = useState("");
   const [isCancelling, setIsCancelling] = useState(false);
+  const [offset, setOffSet] = useState(new Map());
+
+  const getAirportOffset = () => {
+    axios
+      .get(`airport`)
+      .then((res) => {
+        // console.log(res);
+        const offsetData = new Map();
+        res.data.data.forEach((airport) => {
+          offsetData.set(airport.AIRPORT_ID, airport.OFFSET);
+        });
+
+        setOffSet(offsetData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const getTickets = (url) => {
     setLoading(true);
@@ -59,13 +77,16 @@ function TicketInformation({ isUpcoming }) {
       })
       .catch((err) => {
         // console.log("ERR");
-        console.log(err.response.data);
+        console.log(err);
         setLoading(false);
       });
   };
 
   useEffect(() => {
     if (!currentUser) return;
+
+    getAirportOffset();
+
     if (isUpcoming === true)
       getTickets(`customer/${currentUser.CUSTOMER_ID}/upcomingTickets`);
     else getTickets(`customer/${currentUser.CUSTOMER_ID}/archiveTickets`);
@@ -167,10 +188,12 @@ function TicketInformation({ isUpcoming }) {
                   srcAirportName={ticket.SRC_AIRPORT_NAME}
                   srcCity={ticket.SRC_CITY}
                   srcCountry={ticket.SRC_COUNTRY}
+                  srcOffset={offset.get(ticket.SRC_AIRPORT_ID)}
                   destId={ticket.DEST_AIRPORT_ID}
                   destAirportName={ticket.DEST_AIRPORT_NAME}
                   destCity={ticket.DEST_CITY}
                   destCountry={ticket.DEST_COUNTRY}
+                  destOffset={offset.get(ticket.DEST_AIRPORT_ID)}
                   departure={ticket.DEP_TS}
                   arrival={ticket.ARR_TS}
                   duration={ticket.DURATION}
