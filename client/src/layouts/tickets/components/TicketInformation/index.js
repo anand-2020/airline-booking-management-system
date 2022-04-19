@@ -62,7 +62,7 @@ function TicketInformation(props) {
     }
     setActiveDate(idx);
     setFdates(dates);
-    filterByDate(dates[activeDate]);
+    filterByDate(dates[idx]);
   }, [props.flights]);
 
   return (
@@ -134,8 +134,8 @@ function TicketInformation(props) {
                   srcCity={props.srcCity}
                   destId={props.destID}
                   destCity={props.destCity}
-                  departure={moment.utc(flight.DEP_TS).format("HH:mm")}
-                  arrival={moment.utc(flight.ARR_TS).format("HH:mm")}
+                  departure={moment(flight.DEP_TS).format("HH:mm")}
+                  arrival={moment(flight.ARR_TS).format("HH:mm")}
                   duration={flight.DURATION}
                   fare={flight.TICKET_PRICE}
                   flightDateId={flight.FLIGHT_DATE_ID}
@@ -148,7 +148,8 @@ function TicketInformation(props) {
                   flightId={flight.FLIGHT_ID}
                   cancelFlight={props.cancelFlight}
                   addDelay={props.addDelay}
-                  delay={flight.DELAYED_BY}
+                  srcOffset={props.srcOffset}
+                  destOffset={props.destOffset}
                 />
               ))}
             </MDBox>

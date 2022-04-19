@@ -60,6 +60,8 @@ function Ticket({
   noGutter,
   flightId,
   delay,
+  srcOffset,
+  destOffset,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -228,8 +230,13 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold">
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {departure}
+            <MDTypography variant="overline" verticalAlign="super">
+              {srcOffset[0] !== "-"
+                ? `(+${srcOffset.substring(0, 5)})`
+                : `(${srcOffset.substring(0, 6)})`}
+            </MDTypography>
           </MDTypography>
           <MDTypography
             variant="caption"
@@ -269,8 +276,13 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="medium">{destId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold">
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {arrival}
+            <MDTypography variant="overline" verticalAlign="super">
+              {destOffset[0] !== "-"
+                ? `(+${destOffset.substring(0, 5)})`
+                : `(${destOffset.substring(0, 6)})`}
+            </MDTypography>
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {destCity}

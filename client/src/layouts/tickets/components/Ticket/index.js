@@ -61,6 +61,8 @@ function Ticket({
   cancelFlight,
   addDelay,
   delay,
+  srcOffset,
+  destOffset,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -146,6 +148,8 @@ function Ticket({
         numCols,
         flightId,
         delay,
+        srcOffset,
+        destOffset,
       },
     });
   };
@@ -180,8 +184,13 @@ function Ticket({
           {/* <MDBox borderColor={"black"} border={"2px"}> */}
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold">
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {departure}
+            <MDTypography variant="overline" verticalAlign="super">
+              {srcOffset[0] !== "-"
+                ? `(+${srcOffset.substring(0, 5)})`
+                : `(${srcOffset.substring(0, 6)})`}
+            </MDTypography>
           </MDTypography>
           <MDTypography
             variant="caption"
@@ -228,8 +237,13 @@ function Ticket({
         >
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{destId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold">
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {arrival}
+            <MDTypography variant="overline" verticalAlign="super">
+              {destOffset[0] !== "-"
+                ? `(+${destOffset.substring(0, 5)})`
+                : `(${destOffset.substring(0, 6)})`}
+            </MDTypography>
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {titleCase(destCity)}

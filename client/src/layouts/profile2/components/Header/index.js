@@ -362,6 +362,8 @@ function Header({ children, airports }) {
             cancelFlight={cancelFlight}
             addDelay={addDelay}
             date={moment(dateValue).format()}
+            srcOffset={source?.OFFSET}
+            destOffset={destination?.OFFSET}
           ></TicketInformation>
         )}
       </Card>
