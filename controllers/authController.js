@@ -72,6 +72,7 @@ export const protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = user.data[0];
+  req.user.PASSWORD = null;
 
   next();
 });
@@ -79,8 +80,8 @@ export const protect = catchAsync(async (req, res, next) => {
 export const restrictTo = (...roles) => {
   return catchAsync(async (req, res, next) => {
     const id = req.user.CUSTOMER_ID;
-    const user = await db.query(
-      `SELECT ROLE FROM CUSTOMERS WHERE CUSTOMER_ID=${id}`
+    const user = await db.executeQuery(
+      `SELECT ROLE FROM CUSTOMERS WHERE CUSTOMER_ID = '${id}'`
     );
     if (!user.data.length) {
       throw new AppError(
@@ -88,7 +89,8 @@ export const restrictTo = (...roles) => {
         401
       );
     }
-    const role = user.data[0].role;
+
+    const role = user.data[0].ROLE;
     if (!roles.includes(role))
       throw next(
         new AppError("You do not have permission to perform this action", 403)
@@ -178,3 +180,34 @@ export const loggedInStatus = (req, res) => {
     data: { user: req.user },
   });
 };
+
+export const isCustomer = catchAsync(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+  // } else if (req.cookies.jwt) {
+  //   token = req.cookies.jwt;
+  // }
+  if (!token) {
+    return next();
+  }
+
+  const decoded = await verifyJWT(token, next);
+  if (!decoded) return next();
+  // console.log(decoded);
+  const user = await db.executeQuery(
+    `SELECT CUSTOMER_ID FROM CUSTOMERS WHERE CUSTOMER_ID = '${decoded.id}'`
+  );
+  // console.log(user.data);
+  if (!user.data.length) {
+    return next();
+  }
+
+  req.user = user.data[0];
+
+  next();
+});

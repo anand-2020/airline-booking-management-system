@@ -11,7 +11,7 @@ const bookTicket = catchAsync(async (req, res, next) => {
   req.body.TICKETS.forEach((ticket) => {
     query += ` ( 
       '${req.body.FLIGHT_DATE_ID}', 
-      '${req.body.CUSTOMER_ID}', 
+      '${req.user.CUSTOMER_ID}', 
       '${ticket.PASSENGER_NAME}', 
       '${ticket.PASSENGER_AGE}', 
       '${dt}', 

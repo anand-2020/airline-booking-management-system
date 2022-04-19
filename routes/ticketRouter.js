@@ -5,10 +5,16 @@ import {
   cancelTicket,
 } from "../controllers/ticketController.js";
 
+import { protect } from "../controllers/authController.js";
+import { protectCustomer } from "../controllers/customerController.js";
+
 const router = Router();
 
-router.post("/", bookTicket);
+router.post("/", protect, bookTicket);
 
-router.route("/:ticketId").get(getTicket).patch(cancelTicket);
+router
+  .route("/:ticketId")
+  .get(protect, protectCustomer("R", "W"), getTicket)
+  .patch(protect, protectCustomer("W"), cancelTicket);
 
 export default router;

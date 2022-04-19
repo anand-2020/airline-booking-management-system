@@ -12,7 +12,7 @@ export const getAllFlights = catchAsync(async (req, res, next) => {
 });
 
 export const getFlightsBetweenAirports = catchAsync(async (req, res, next) => {
-  const cid = "af";
+  let cid = "lm2"; // DEFAULT USER ID
   if (req.user) {
     cid = req.user.CUSTOMER_ID;
   }
