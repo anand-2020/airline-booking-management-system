@@ -367,6 +367,8 @@ const Tables = () => {
                     flightId={location?.state?.flightId}
                     srcCity={location?.state?.srcCity}
                     delay={location?.state?.delay}
+                    srcOffset={location?.state?.srcOffset}
+                    destOffset={location?.state?.destOffset}
                   />
                   {/* {flightDetails} */}
                 </MDBox>

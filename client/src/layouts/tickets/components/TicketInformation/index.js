@@ -148,7 +148,8 @@ function TicketInformation(props) {
                   flightId={flight.FLIGHT_ID}
                   cancelFlight={props.cancelFlight}
                   addDelay={props.addDelay}
-                  delay={flight.DELAYED_BY}
+                  srcOffset={props.srcOffset}
+                  destOffset={props.destOffset}
                 />
               ))}
             </MDBox>

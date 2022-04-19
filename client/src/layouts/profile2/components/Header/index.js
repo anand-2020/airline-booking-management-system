@@ -62,6 +62,7 @@ function Header({ children, airports }) {
   const [flights, setFlights] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState("");
+  const [offset, setOffset] = useState(new Map());
 
   const handleDateChange = (newDate) => {
     setDateValue(newDate);
@@ -74,6 +75,15 @@ function Header({ children, airports }) {
 
     setSnackbarOpen(false);
   };
+
+  useEffect(() => {
+    const offsetData = new Map();
+    airports.forEach((airport) => {
+      offsetData.set(airport.AIRPORT_ID, airport.OFFSET);
+    });
+
+    setOffset(offsetData);
+  }, []);
 
   const handleSearch = () => {
     // console.log(moment(dateValue).format());
@@ -356,6 +366,8 @@ function Header({ children, airports }) {
           <TicketInformation
             flights={flights}
             destCity={`${destination?.CITY}`}
+            srcOffset={offset.get(source?.AIRPORT_ID)}
+            destOffset={offset.get(destination?.AIRPORT_ID)}
             srcCity={`${source?.CITY}`}
             srcID={source?.AIRPORT_ID}
             destID={destination?.AIRPORT_ID}
