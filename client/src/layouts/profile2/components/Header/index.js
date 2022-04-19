@@ -361,6 +361,7 @@ function Header({ children, airports }) {
             destID={destination?.AIRPORT_ID}
             cancelFlight={cancelFlight}
             addDelay={addDelay}
+            date={moment(dateValue).format()}
           ></TicketInformation>
         )}
       </Card>

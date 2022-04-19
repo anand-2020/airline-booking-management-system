@@ -53,6 +53,14 @@ function TicketInformation(props) {
       dates.push(moment(flight.DEP_TS.substring(0, 10)).format("DD/MM/YY"))
     );
     dates = dates.filter((x, i, a) => a.indexOf(x) === i);
+    let idx = 0;
+    for (let i = 0; i < dates.length; i++) {
+      if (dates[i] === moment(props.date).format("DD/MM/YY")) {
+        idx = i;
+        break;
+      }
+    }
+    setActiveDate(idx);
     setFdates(dates);
     filterByDate(dates[activeDate]);
   }, [props.flights]);
