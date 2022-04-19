@@ -75,12 +75,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       setMiniSidenav(dispatch, window.innerWidth < 1200);
       setTransparentSidenav(
         dispatch,
-        window.innerWidth < 1200 ? false : transparentSidenav
+        window.innerWidth < 200 ? false : transparentSidenav
       );
-      setWhiteSidenav(
-        dispatch,
-        window.innerWidth < 1200 ? false : whiteSidenav
-      );
+      setWhiteSidenav(dispatch, window.innerWidth < 200 ? false : whiteSidenav);
     }
 
     /** 
@@ -159,11 +156,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   );
 
   return (
-    <SidenavRoot
-      {...rest}
-      variant="permanent"
-      ownerState={{ whiteSidenav, miniSidenav }}
-    >
+    <SidenavRoot {...rest} variant="permanent" ownerState={{ miniSidenav }}>
       <MDBox pt={3} pb={1} px={4} textAlign="center">
         <MDBox
           display={{ xs: "block", xl: "none" }}
@@ -174,7 +167,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           onClick={closeSidenav}
           sx={{ cursor: "pointer" }}
         >
-          <MDTypography variant="h6" color="secondary">
+          <MDTypography variant="h4" color="secondary">
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </MDTypography>
         </MDBox>

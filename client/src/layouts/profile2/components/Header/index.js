@@ -51,6 +51,8 @@ import TicketInformation from "../../../tickets/components/TicketInformation";
 import Autocomplete from "@mui/material/Autocomplete";
 import Spinner from "components/Spinner";
 import axios from "axiosInstance";
+import MDSnackbar from "components/MDSnackbar";
+import MDAlert from "components/MDAlert";
 
 function Header({ children, airports }) {
   const [dateValue, setDateValue] = useState(new Date());
@@ -58,9 +60,19 @@ function Header({ children, airports }) {
   const [destination, setDestination] = useState(null);
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState("");
 
   const handleDateChange = (newDate) => {
     setDateValue(newDate);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackbarOpen(false);
   };
 
   const handleSearch = () => {
@@ -74,6 +86,7 @@ function Header({ children, airports }) {
       )
       .then((res) => {
         setFlights(res.data.data);
+
         setLoading(false);
         console.log(res);
       })
@@ -83,8 +96,80 @@ function Header({ children, airports }) {
       });
   };
 
+  const cancelFlight = (flightDateId) => {
+    setLoading(true);
+    let currFlight = null;
+    for (let i = 0; i < flights.length; i++) {
+      if (flights[i].FLIGHT_DATE_ID === flightDateId) {
+        currFlight = flights[i];
+        break;
+      }
+    }
+    axios
+      .patch(`flight/${currFlight.FLIGHT_ID}`, {
+        CANCEL: true,
+        DEPARTURE_DATE: moment(currFlight.DEP_TS.substring(0, 10)).format(),
+      })
+      .then((res) => {
+        const oldFlights = [...flights];
+        const updatedFlights = oldFlights.filter(
+          (el) => el.FLIGHT_DATE_ID !== flightDateId
+        );
+        setFlights(updatedFlights);
+        setSnackbarMsg("Flight cancelled successfully.");
+        setSnackbarOpen(true);
+        setLoading(false);
+        // console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
+  const addDelay = (delay, flightDateId) => {
+    setLoading(true);
+    let currFlight = null;
+    let currFlightIdx = null;
+    for (let i = 0; i < flights.length; i++) {
+      if (flights[i].FLIGHT_DATE_ID === flightDateId) {
+        currFlight = flights[i];
+        currFlightIdx = i;
+        break;
+      }
+    }
+    axios
+      .patch(`flight/${currFlight.FLIGHT_ID}`, {
+        DEPARTURE_DATE: moment(currFlight.DEP_TS.substring(0, 10)).format(),
+        DELAY_TIME: delay,
+      })
+      .then((res) => {
+        const oldFlights = [...flights];
+        oldFlights[currFlightIdx].DELAYED_BY = delay;
+        setFlights(oldFlights);
+        setSnackbarMsg("Flight delayed successfully.");
+        setSnackbarOpen(true);
+        setLoading(false);
+        // console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
   return (
     <MDBox position="relative" mb={5}>
+      <MDSnackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        close={handleSnackbarClose}
+        content={snackbarMsg}
+        icon="notifications"
+        title="Notification"
+        color="success"
+      />
+
       <MDBox
         display="flex"
         alignItems="center"
@@ -264,7 +349,9 @@ function Header({ children, airports }) {
       >
         <Grid container spacing={3} alignItems="center"></Grid>
         {loading ? (
-          <Spinner />
+          <MDBox pt={3}>
+            <Spinner />
+          </MDBox>
         ) : (
           <TicketInformation
             flights={flights}
@@ -272,6 +359,8 @@ function Header({ children, airports }) {
             srcCity={`${source?.CITY}`}
             srcID={source?.AIRPORT_ID}
             destID={destination?.AIRPORT_ID}
+            cancelFlight={cancelFlight}
+            addDelay={addDelay}
           ></TicketInformation>
         )}
       </Card>

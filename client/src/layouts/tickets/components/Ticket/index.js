@@ -32,6 +32,15 @@ import { Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "authContext";
 import { useContext } from "react";
+import FlightDelayForm from "layouts/form/flightDelay.js";
+import Dialog from "layouts/dialog";
+import Spinner from "components/Spinner";
+import MuiDialog from "@mui/material/Dialog";
+import MuiDialogActions from "@mui/material/DialogActions";
+import MuiDialogContent from "@mui/material/DialogContent";
+import MuiDialogContentText from "@mui/material/DialogContentText";
+import MuiDialogTitle from "@mui/material/DialogTitle";
+import { useState } from "react";
 
 function Ticket({
   srcId,
@@ -48,11 +57,66 @@ function Ticket({
   numRows,
   numCols,
   flightId,
+  cancelFlight,
+  addDelay,
+  delay,
 }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const navigate = useNavigate();
   const { canWrite } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const cancelConfirmation = () => {
+    setOpen(true);
+  };
+
+  const ConfirmationDialog = (
+    <MuiDialog
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="confirm-dialog"
+      textAlign="center"
+      justify="center"
+      alignItems="center"
+    >
+      <MuiDialogTitle textAlign="center">
+        <MDTypography fontWeight="medium">Confirm Cancellation</MDTypography>
+      </MuiDialogTitle>
+
+      <MuiDialogContent id="confirm-dialog" textAlign="center">
+        <MDTypography variant="h6" fontWeight="regular">
+          Flight Date ID: {flightDateId}
+        </MDTypography>
+      </MuiDialogContent>
+      <MuiDialogActions>
+        {isCancelling === true ? (
+          <Spinner />
+        ) : (
+          <>
+            <MDButton
+              variant="contained"
+              onClick={() => setOpen(false)}
+              color="info"
+            >
+              No
+            </MDButton>
+            <MDButton
+              variant="contained"
+              onClick={() => {
+                setIsCancelling(true);
+                cancelFlight(flightDateId);
+              }}
+              color="info"
+            >
+              Yes
+            </MDButton>
+          </>
+        )}
+      </MuiDialogActions>
+    </MuiDialog>
+  );
 
   const navigateToBooking = () => {
     navigate("/bookFlight", {
@@ -82,6 +146,7 @@ function Ticket({
       mb={noGutter ? 0 : 1}
       mt={2}
     >
+      {ConfirmationDialog}
       <Grid
         container
         // component="li"
@@ -105,6 +170,12 @@ function Ticket({
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
           <MDTypography variant="h4" fontWeight="bold">
             {departure}
+          </MDTypography>
+          <MDTypography
+            variant="caption"
+            color={delay !== "00:00:00" ? "error" : "secondary"}
+          >
+            {`Delayed by ${delay}`}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {srcCity}
@@ -188,28 +259,38 @@ function Ticket({
               <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
             </MDButton>
           </Grid>
-          {canWrite == true && (
+          {canWrite === true && (
             <Grid item md={4} lg={12}>
-              <MDButton
-                variant="contained"
-                color="warning"
-                size={canWrite === true ? "small" : "large"}
-                onClick={navigateToBooking}
+              <Dialog
+                title="Delay Flight"
+                action={
+                  <MDButton
+                    variant="contained"
+                    color="warning"
+                    size={canWrite === true ? "small" : "large"}
+                  >
+                    &nbsp;DELAY
+                  </MDButton>
+                }
               >
-                <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;DELAY
-              </MDButton>
+                <FlightDelayForm
+                  flightId={flightId}
+                  flightDateId={flightDateId}
+                  addDelay={addDelay}
+                />
+              </Dialog>
             </Grid>
           )}
 
-          {canWrite == true && (
+          {canWrite === true && (
             <Grid item md={4} lg={12}>
               <MDButton
                 variant="contained"
                 color="error"
                 size={canWrite == true ? "small" : "large"}
-                onClick={navigateToBooking}
+                onClick={cancelConfirmation}
               >
-                <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;CANCEL
+                &nbsp;CANCEL
               </MDButton>
             </Grid>
           )}
@@ -233,7 +314,7 @@ Ticket.propTypes = {
   departure: PropTypes.string.isRequired,
   arrival: PropTypes.string.isRequired,
   duration: PropTypes.string.isRequired,
-  fare: PropTypes.string.isRequired,
+  fare: PropTypes.number.isRequired,
   noGutter: PropTypes.bool,
 };
 

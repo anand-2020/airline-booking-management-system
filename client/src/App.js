@@ -187,6 +187,7 @@ export default function App() {
             routes={navbarRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
+            type="collapse"
           />
         )}
         <Routes>
