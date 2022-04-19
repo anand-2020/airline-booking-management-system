@@ -1,6 +1,7 @@
 import db from "../models/database.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
+import { restrictTo } from "./authController.js";
 
 const getAllCustomer = catchAsync(async (req, res, next) => {
   const query = "SELECT * FROM CUSTOMERS";
@@ -36,7 +37,6 @@ const getCustomer = catchAsync(async (req, res, next) => {
 });
 
 const updateCustomer = catchAsync(async (req, res, next) => {
-  console.log("updt customer");
   let query = `UPDATE CUSTOMERS SET `;
 
   if (req.body.CUSTOMER_NAME) {
@@ -71,10 +71,10 @@ const updateCustomer = catchAsync(async (req, res, next) => {
 
   query += ` WHERE CUSTOMER_ID = '${req.params.id}'`;
 
-  console.log(query);
+  //console.log(query);
   await db.executeQuery(query);
 
-  console.log("executed");
+  // console.log("executed");
   res.status(200).json({
     status: "success",
   });
@@ -102,10 +102,44 @@ const getCustomerArchiveTickets = catchAsync(async (req, res, next) => {
   });
 });
 
+const protectCustomer = (...roles) => {
+  return catchAsync(async (req, res, next) => {
+    if (!req.user) {
+      throw next(new AppError(`UNAUTHORIZED! Please Login first`, 404));
+    }
+
+    if (req.user.CUSTOMER_ID != req.params.id) {
+      if (roles.length === 0) {
+        throw next(
+          new AppError("You do not have permission to perform this action", 403)
+        );
+      }
+      const id = req.user.CUSTOMER_ID;
+      const user = await db.executeQuery(
+        `SELECT ROLE FROM CUSTOMERS WHERE CUSTOMER_ID = '${id}'`
+      );
+      if (!user.data.length) {
+        throw new AppError(
+          "The user belonging to this token does no longer exist.",
+          401
+        );
+      }
+      const role = user.data[0].ROLE;
+      if (!roles.includes(role))
+        throw next(
+          new AppError("You do not have permission to perform this action", 403)
+        );
+
+      next();
+    } else next();
+  });
+};
+
 export {
   getAllCustomer,
   getCustomer,
   updateCustomer,
+  protectCustomer,
   getCustomerUpcomingTickets,
   getCustomerArchiveTickets,
 };

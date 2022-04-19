@@ -41,7 +41,7 @@ import { useMaterialUIController } from "context";
 import Grid from "@mui/material/Grid";
 import { IconButton, Divider } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@mui/material/Icon";
 import backgroundImage from "assets/images/destinations/BOM.jpg";
 
@@ -52,10 +52,12 @@ function Ticket({
   srcAirportName,
   srcCity,
   srcCountry,
+  srcOffset,
   destId,
   destAirportName,
   destCountry,
   destCity,
+  destOffset,
   departure,
   arrival,
   duration,
@@ -551,10 +553,10 @@ function Ticket({
         justifyContent={"center"}
       >
         <MDTypography fontWeight="bold" fontSize="medium">
-          FLIGHT ID&nbsp;-&nbsp;
+          SEAT&nbsp;-&nbsp;
         </MDTypography>
         <MDTypography fontWeight="normal" color="secondary" fontSize="medium">
-          {`${flightId}`}
+          {`${seat}`}
         </MDTypography>
       </Grid>
       <Grid
@@ -660,7 +662,12 @@ function Ticket({
               </ListItemIcon>
               <ListItemText sx={{ ml: -3 }}>
                 <MDTypography variant="h6" fontWeight="light">
-                  {new Date(bookedDate).toString().substring(0, 24)}
+                  {new Date(
+                    new Date(bookedDate).getTime() -
+                      new Date().getTimezoneOffset() * 60000
+                  )
+                    .toString()
+                    .substring(0, 24)}
                 </MDTypography>
               </ListItemText>
             </ListItem>
@@ -737,7 +744,7 @@ function Ticket({
         spacing={3}
         // mx="auto"
       >
-        <MDBox mr={2}>
+        <MDBox mr={2} ml={-1}>
           <MDButton
             variant="contained"
             color="info"
@@ -763,8 +770,13 @@ function Ticket({
           {/* <MDBox borderColor={"black"} border={"2px"}> */}
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold">
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {new Date(departure).toTimeString().substring(0, 5)}
+            <MDTypography variant="overline" verticalAlign="super">
+              {srcOffset[0] !== "-"
+                ? `(+${srcOffset.substring(0, 5)})`
+                : `(${srcOffset.substring(0, 6)})`}
+            </MDTypography>
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {new Date(departure).toDateString()}
@@ -781,6 +793,7 @@ function Ticket({
           lg={2}
           sm={3}
           xs={7}
+          sx={{ ml: 4, mr: 2 }}
           display="flex"
           alignItems="center"
           flexDirection={"column"}
@@ -807,8 +820,13 @@ function Ticket({
         >
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{destId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold">
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {new Date(arrival).toTimeString().substring(0, 5)}
+            <MDTypography variant="overline" verticalAlign="super">
+              {destOffset[0] !== "-"
+                ? `(+${destOffset.substring(0, 5)})`
+                : `(${destOffset.substring(0, 6)})`}
+            </MDTypography>
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
             {new Date(arrival).toDateString()}
@@ -820,46 +838,20 @@ function Ticket({
         </Grid>
         <Grid
           item
+          lg={2}
           sm={3}
           xs={7}
+          sx={{ ml: 5 }}
           display="flex"
           alignItems="center"
           flexDirection={"column"}
         >
           <MDTypography variant="h6" fontWeight="regular">
-            SEAT
+            Flight ID
           </MDTypography>
-          <MDTypography fontWeight="medium">{seat}</MDTypography>
+          <MDTypography fontWeight="medium">{flightId}</MDTypography>
         </Grid>
-
-        {/* <Grid
-          item
-          lg={2}
-          sm={3}
-          xs={7}
-          display="flex"
-          alignItems="center"
-          flexDirection={"column"}
-        >
-          <MDTypography fontWeight="bold">&#8377;{fare}</MDTypography>
-        </Grid> */}
       </Grid>
-      {/* {isCancelled === true ? (
-        <Grid
-          item
-          sx={{ mt: 2, backgroundColor: "	#C0C0C0", borderRadius: 2 }}
-          display="flex"
-          alignItems="center"
-          flexDirection={"column"}
-        >
-          
-          <MDTypography variant="h5" fontWeight="bold" color="white">
-            CANCELLED
-          </MDTypography>
-
-          
-        </Grid>
-      ) : null} */}
       <Grid
         item
         xs={12}

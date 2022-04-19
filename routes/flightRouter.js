@@ -7,13 +7,22 @@ import {
   getFlightsBetweenAirports,
 } from "../controllers/flightController.js";
 
+import {
+  protect,
+  restrictTo,
+  isCustomer,
+} from "../controllers/authController.js";
+
 const router = Router();
 
-router.route("/").get(getAllFlights).post(addFlight);
-router.route("/:flightId").patch(updateFlight);
+router.route("/").get(getAllFlights).post(protect, restrictTo("W"), addFlight);
 
-router.route("/:srcId/:destId/:dateOfDeparture").get(getFlightsBetweenAirports);
+router.route("/:flightId").patch(protect, restrictTo("W"), updateFlight);
 
-router.get("/tickets/:flightDateId", bookedTicketsForFlight);
+router
+  .route("/:srcId/:destId/:dateOfDeparture")
+  .get(isCustomer, getFlightsBetweenAirports);
+
+router.get("/tickets/:flightDateId", protect, bookedTicketsForFlight);
 
 export default router;
