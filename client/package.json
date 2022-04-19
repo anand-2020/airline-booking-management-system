@@ -2,11 +2,12 @@
   "name": "monke-airlines",
   "version": "2.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "author": "Rahul, Divyansh, Anand",
   "license": "",
   "description": "",
   "engines": {
-    "node": "14 || 15 || 16",
+    "node": ">=14",
     "npm": ">=6"
   },
   "dependencies": {

@@ -44,6 +44,7 @@ import Collapse from "@mui/material/Collapse";
 import { useState, useEffect } from "react";
 import Icon from "@mui/material/Icon";
 import backgroundImage from "assets/images/destinations/BOM.jpg";
+import logoName from "assets/images/logos/logo-name.png";
 
 function Ticket({
   ticketId,
@@ -399,12 +400,12 @@ function Ticket({
       <div class="card_heading">
         <div class="card_logo">
           <img
-            src="http://logonoid.com/images/tigerair-logo.png"
+            src="${logoName}"
             class="tigerair"
           />
         </div>
         <img
-          src="https://github.com/anand-2020/airline-booking-management-system/blob/fee1b01493fca49f009fe80c27f0dbcefe6ffcd3/client/src/assets/images/destinations/${destId}.jpg"
+          src="${backgroundImage}"
           alt=""
           class="dest_img"
         />

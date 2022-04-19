@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const defaultOptions = {
-  baseURL: "http://localhost:5000/api/",
+  baseURL: "/api/",
   headers: {
     "Content-Type": "application/json",
   },

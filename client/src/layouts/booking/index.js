@@ -69,12 +69,16 @@ const Tables = () => {
   const addPassenger = (row, col) => {
     const curr = new Array(passengerDetails.length);
     for (let i = 0; i < curr.length; i++) curr[i] = { ...passengerDetails[i] };
+    let fare = location?.state?.fare;
+    if (col === seatData[0].length || col === 1) fare = fare + 150;
+
     curr.push({
       name: "",
       age: null,
       seatNumber: `${row}${getLetter(col)}`,
       row: row,
       col: col,
+      fare: fare,
     });
     setPassengerDetails(curr);
   };
@@ -140,11 +144,12 @@ const Tables = () => {
       payloadContent[i] = {
         PASSENGER_NAME: passengerDetails[i].name,
         PASSENGER_AGE: passengerDetails[i].age,
-        FARE: location?.state?.fare,
+        FARE: passengerDetails[i].fare,
         ROW_NUM: passengerDetails[i].row,
         COL_NUM: passengerDetails[i].col,
       };
     }
+    console.log(payloadContent);
     axios
       .post(`ticket/`, {
         TICKETS: [...payloadContent],
@@ -208,7 +213,7 @@ const Tables = () => {
       }}
     >
       <Grid item display="flex" spacing={1} mt={3}>
-        <MDTypography fontWeight="bold">P I L O T</MDTypography>
+        <MDTypography fontWeight="bold">Reserve your seat</MDTypography>
       </Grid>
 
       {seatData.map((dataRow, rowIdx) => (
@@ -226,8 +231,8 @@ const Tables = () => {
                     data === 2
                       ? "disabled"
                       : colIdx === 0 || colIdx === dataRow.length - 1
-                      ? "success"
-                      : "primary"
+                      ? "dark"
+                      : "muted"
                   }
                 />
               ) : (
@@ -237,8 +242,8 @@ const Tables = () => {
                     data === 2
                       ? "disabled"
                       : colIdx === 0 || colIdx === dataRow.length - 1
-                      ? "success"
-                      : "primary"
+                      ? "dark"
+                      : "muted"
                   }
                 />
               )}
@@ -346,9 +351,9 @@ const Tables = () => {
                   py={1}
                   px={2}
                   variant="gradient"
-                  bgColor="info"
+                  sx={{ background: "#012169" }}
                   borderRadius="lg"
-                  coloredShadow="info"
+                  coloredShadow="dark"
                 >
                   <Header
                     srcId={location?.state?.srcId}
@@ -429,9 +434,9 @@ const Tables = () => {
                         <>
                           <Grid item>
                             <MDButton
-                              variant="contained"
-                              color={disablePay() ? "secondary" : "success"}
-                              size="large"
+                              variant="gradient"
+                              color={disablePay() ? "secondary" : "info"}
+                              size="medium"
                               disabled={disablePay()}
                               onClick={bookTickets}
                             >
@@ -441,9 +446,9 @@ const Tables = () => {
                           {/* &nbsp; */}
                           <Grid item>
                             <MDButton
-                              variant="contained"
-                              color={"error"}
-                              size="large"
+                              variant="gradient"
+                              color={"dark"}
+                              size="medium"
                               disabled={loading}
                               onClick={() => navigate(-1)}
                             >

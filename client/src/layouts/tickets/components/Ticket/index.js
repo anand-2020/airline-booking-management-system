@@ -41,6 +41,7 @@ import MuiDialogContent from "@mui/material/DialogContent";
 import MuiDialogContentText from "@mui/material/DialogContentText";
 import MuiDialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
+import { AccessTime } from "@mui/icons-material";
 
 function Ticket({
   srcId,
@@ -70,6 +71,16 @@ function Ticket({
 
   const cancelConfirmation = () => {
     setOpen(true);
+  };
+
+  const titleCase = (str) => {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
   };
 
   const ConfirmationDialog = (
@@ -176,10 +187,10 @@ function Ticket({
             variant="caption"
             color={delay !== "00:00:00" ? "error" : "success"}
           >
-            {delay !== "00:00:00" ? `Delayed by ${delay}` : `No delay`}
+            {delay !== "00:00:00" ? `Delayed by ${delay}` : `On Time`}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
-            {srcCity}
+            {titleCase(srcCity)}
           </MDTypography>
           {/* </Stack> */}
           {/* </MDBox> */}
@@ -196,12 +207,13 @@ function Ticket({
           justifyContent={"center"}
         >
           {/* <Stack spacing={0} textAlign="center"> */}
-          <Divider flexItem>
-            <MDTypography variant="h6" fontWeight="medium">
-              {`${duration.substring(0, 2)}hr ${duration.substring(3, 5)}min`}
-            </MDTypography>
-          </Divider>
-          &nbsp;&nbsp;
+          <AccessTime />
+          {/* <Divider flexItem> */}
+          <MDTypography variant="body2" fontWeight="medium" color="secondary">
+            {`${duration.substring(0, 2)}hr ${duration.substring(3, 5)}min`}
+          </MDTypography>
+          {/* </Divider> */}
+          {/* &nbsp;&nbsp; */}
           {/* </Stack> */}
         </Grid>
 
@@ -220,7 +232,7 @@ function Ticket({
             {arrival}
           </MDTypography>
           <MDTypography variant="h6" fontWeight="light">
-            {destCity}
+            {titleCase(destCity)}
           </MDTypography>
           {/* </Stack> */}
         </Grid>
@@ -252,8 +264,8 @@ function Ticket({
         >
           <Grid item md={4} lg={12}>
             <MDButton
-              variant="contained"
-              color="primary"
+              variant="gradient"
+              color="dark"
               size={canWrite == true ? "small" : "large"}
               onClick={navigateToBooking}
             >
@@ -266,8 +278,9 @@ function Ticket({
                 title="Delay Flight"
                 action={
                   <MDButton
-                    variant="contained"
-                    color="warning"
+                    variant="gradient"
+                    //sx={{ background: "#088F8F" }}
+                    color="dark"
                     size={canWrite === true ? "small" : "large"}
                   >
                     &nbsp;DELAY
@@ -286,8 +299,8 @@ function Ticket({
           {canWrite === true && (
             <Grid item md={4} lg={12}>
               <MDButton
-                variant="contained"
-                color="error"
+                variant="gradient"
+                color="dark"
                 size={canWrite == true ? "small" : "large"}
                 onClick={cancelConfirmation}
               >

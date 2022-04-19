@@ -80,6 +80,7 @@ function TicketInformation(props) {
         <>
           <MDBox
             pt={3}
+            pb={1}
             px={2}
             sx={{ overflowX: "scroll" }}
             // sx={{ maxWidth: "50vw", bgcolor: "white" }}
@@ -91,7 +92,11 @@ function TicketInformation(props) {
                     key={idx}
                     variant={idx === activeDate ? "contained" : "outlined"}
                     onClick={() => handleDateButtonClick(idx)}
-                    sx={{ width: "200px" }}
+                    sx={{
+                      width: "150px",
+                      background: idx === activeDate ? "#002D62" : "none",
+                    }}
+                    size="small"
                   >
                     <MDTypography
                       opacity={10}
