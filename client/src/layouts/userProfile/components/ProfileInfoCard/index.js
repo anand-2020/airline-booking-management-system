@@ -47,6 +47,8 @@ import MDButton from "components/MDButton";
 import Dialog from "layouts/dialog";
 import UserInfo from "layouts/form/userInfo";
 
+import DialCode from "../../../form/data/dialCode.js";
+
 function ProfileInfoCard({
   customerId,
   customerName,
@@ -56,6 +58,8 @@ function ProfileInfoCard({
   phoneNo,
   email,
   address,
+  isAdmin,
+  profession,
   shadow,
 }) {
   return (
@@ -78,10 +82,20 @@ function ProfileInfoCard({
           variant="h5"
           fontWeight="medium"
           textAlign="center"
-          sx={{ mt: 2, mb: 5 }}
+          sx={{ mt: 2 }}
         >
           @{customerId}
         </MDTypography>
+        {isAdmin == true || (isAdmin === false && profession !== "OTHER") ? (
+          <MDTypography
+            variant="overline"
+            fontWeight="regular"
+            textAlign="center"
+            sx={{ mb: 5 }}
+          >
+            {isAdmin === true ? "(ADMIN)" : `(${profession})`}
+          </MDTypography>
+        ) : null}
       </Grid>
 
       <Grid
@@ -140,7 +154,7 @@ function ProfileInfoCard({
               </ListItemIcon>
               <ListItemText sx={{ ml: -3 }}>
                 <MDTypography variant="h6" fontWeight="medium">
-                  ({countryCode})&nbsp;{phoneNo}
+                  ({DialCode.get(countryCode)})&nbsp;{phoneNo}
                 </MDTypography>
               </ListItemText>
             </ListItem>
