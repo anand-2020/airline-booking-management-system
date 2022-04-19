@@ -43,7 +43,7 @@ import { IconButton, Divider } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import { useState, useEffect } from "react";
 import Icon from "@mui/material/Icon";
-import backgroundImage from "assets/images/destinations/BOM.jpg";
+import backgroundImage from "assets/images/sign-in/11.jpg";
 import logoName from "assets/images/logos/logo-name.png";
 
 function Ticket({
@@ -152,21 +152,14 @@ function Ticket({
       background: #ffffff;
       border-radius: 20px 20px 0 0;
     }
-    .card_logo img.qatar {
-      margin: -50px;
-      text-align: center;
-      width: 70%;
-    }
-    .card_logo img.tigerair {
-      margin-top: 10px;
+    
+    .card_logo img.monkeair {
+      margin-top: 20px;
       text-align: center;
       width: 45%;
+      padding-bottom: 20px;
     }
-    .card_logo img.airasia {
-      margin: -10px;
-      text-align: center;
-      width: 35%;
-    }
+    
     .card_heading h2 {
       padding-top: 20px;
       text-align: center;
@@ -401,7 +394,7 @@ function Ticket({
         <div class="card_logo">
           <img
             src="${logoName}"
-            class="tigerair"
+            class="monkeair"
           />
         </div>
         <img
@@ -476,7 +469,7 @@ function Ticket({
       setTimeout(function () {
         newWin.print();
         newWin.close();
-      }, 5000);
+      }, 1000);
     };
   })();
 
