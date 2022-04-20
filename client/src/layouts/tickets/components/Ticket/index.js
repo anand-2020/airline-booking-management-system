@@ -184,7 +184,7 @@ function Ticket({
           {/* <MDBox borderColor={"black"} border={"2px"}> */}
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -3, ml: 2 }}>
             {departure}
             <MDTypography variant="overline" verticalAlign="super">
               {srcOffset[0] !== "-"
@@ -237,7 +237,7 @@ function Ticket({
         >
           {/* <Stack spacing={0} textAlign="center"> */}
           <MDTypography fontWeight="medium">{destId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -3, ml: 2 }}>
             {arrival}
             <MDTypography variant="overline" verticalAlign="super">
               {destOffset[0] !== "-"
@@ -260,7 +260,7 @@ function Ticket({
           alignItems="center"
           flexDirection={"column"}
         >
-          <MDTypography fontWeight="bold">&#8377;{fare}</MDTypography>
+          <MDTypography fontWeight="bold">&#8377; {fare}</MDTypography>
         </Grid>
 
         <Grid
@@ -274,54 +274,65 @@ function Ticket({
           display="flex"
           alignItems="center"
           justifyContent={"center"}
+          flexDirection={"column"}
           spacing={1}
         >
           <Grid item md={4} lg={12}>
             <MDButton
               variant="gradient"
               color="dark"
-              size={canWrite == true ? "small" : "large"}
+              sx={{ background: "#002D62" }}
+              size={canWrite == true ? "small" : "medium"}
               onClick={navigateToBooking}
             >
               <AirplaneTicketIcon></AirplaneTicketIcon>&nbsp;BOOK
             </MDButton>
           </Grid>
-          {canWrite === true && (
-            <Grid item md={4} lg={12}>
-              <Dialog
-                title="Delay Flight"
-                action={
-                  <MDButton
-                    variant="gradient"
-                    //sx={{ background: "#088F8F" }}
-                    color="dark"
-                    size={canWrite === true ? "small" : "large"}
-                  >
-                    &nbsp;DELAY
-                  </MDButton>
-                }
-              >
-                <FlightDelayForm
-                  flightId={flightId}
-                  flightDateId={flightDateId}
-                  addDelay={addDelay}
-                />
-              </Dialog>
-            </Grid>
-          )}
+          <Grid
+            container
+            item
+            display="flex"
+            alignItems="center"
+            justifyContent={"center"}
+            spacing={1}
+          >
+            {canWrite === true && (
+              <Grid item md={4} lg={6}>
+                <Dialog
+                  title="Delay Flight"
+                  action={
+                    <MDButton
+                      variant="gradient"
+                      //sx={{ background: "#088F8F" }}
+                      color="dark"
+                      size={canWrite === true ? "small" : "large"}
+                    >
+                      &nbsp;DELAY
+                    </MDButton>
+                  }
+                >
+                  <FlightDelayForm
+                    flightId={flightId}
+                    flightDateId={flightDateId}
+                    addDelay={addDelay}
+                  />
+                </Dialog>
+              </Grid>
+            )}
 
-          {canWrite === true && (
-            <Grid item md={4} lg={12}>
-              <MDButton
-                variant="gradient"
-                color="dark"
-                size={canWrite == true ? "small" : "large"}
-                onClick={cancelConfirmation}
-              >
-                &nbsp;CANCEL
-              </MDButton>
-            </Grid>
-          )}
+            {canWrite === true && (
+              <Grid item md={4} lg={6}>
+                <MDButton
+                  variant="gradient"
+                  color="dark"
+                  size={canWrite == true ? "small" : "large"}
+                  onClick={cancelConfirmation}
+                >
+                  &nbsp;CANCEL
+                </MDButton>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </MDBox>

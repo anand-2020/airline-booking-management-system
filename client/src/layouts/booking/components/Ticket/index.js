@@ -230,7 +230,7 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
+          <MDTypography variant="h4" fontWeight="bold" sx={{ ml: 3, mr: -2 }}>
             {departure}
             <MDTypography variant="overline" verticalAlign="super">
               {srcOffset[0] !== "-"
@@ -276,7 +276,7 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="medium">{destId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
+          <MDTypography variant="h4" fontWeight="bold" sx={{ ml: 3, mr: -2 }}>
             {arrival}
             <MDTypography variant="overline" verticalAlign="super">
               {destOffset[0] !== "-"
