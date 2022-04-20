@@ -81,7 +81,7 @@ function Cover() {
         ADDRESS: addressVal,
       })
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         localStorage.setItem("jwt", res.data.token);
         updateAuthData(
           true,

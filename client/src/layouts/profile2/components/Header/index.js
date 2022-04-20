@@ -118,7 +118,7 @@ function Header({ children, airports }) {
     axios
       .patch(`flight/${currFlight.FLIGHT_ID}`, {
         CANCEL: true,
-        DEPARTURE_DATE: moment(currFlight.DEP_TS.substring(0, 10)).format(),
+        DEPARTURE_DATE: moment(currFlight.DEP_TS).format("YYYY-MM-DD"),
       })
       .then((res) => {
         const oldFlights = [...flights];
@@ -150,7 +150,7 @@ function Header({ children, airports }) {
     }
     axios
       .patch(`flight/${currFlight.FLIGHT_ID}`, {
-        DEPARTURE_DATE: moment(currFlight.DEP_TS.substring(0, 10)).format(),
+        DEPARTURE_DATE: moment(currFlight.DEP_TS).format("YYYY-MM-DD"),
         DELAY_TIME: delay,
       })
       .then((res) => {

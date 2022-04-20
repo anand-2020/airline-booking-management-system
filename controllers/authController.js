@@ -129,7 +129,7 @@ export const login = catchAsync(async (req, res, next) => {
 export const signup = catchAsync(async (req, res, next) => {
   const newCustomer = {
     CUSTOMER_ID: req.body.CUSTOMER_ID,
-    CNAME: req.body.CNAME,
+    CUSTOMER_NAME: req.body.CNAME,
     EMAIL_ID: req.body.EMAIL_ID,
     PASSWORD: req.body.PASSWORD,
     GENDER: req.body.GENDER,
@@ -148,7 +148,7 @@ export const signup = catchAsync(async (req, res, next) => {
   // console.log(newCustomer.PASSWORD);
   // const queery = "SELECT * FROM CUSTOMERS";
 
-  const queery = `INSERT INTO CUSTOMERS VALUES ('${newCustomer.CUSTOMER_ID}', '${newCustomer.PASSWORD}', '${newCustomer.EMAIL_ID}', '${newCustomer.CNAME}', '${newCustomer.GENDER}', STR_TO_DATE('${newCustomer.DOB}','%Y-%m-%d'), '${newCustomer.ROLE}', '${newCustomer.PROFESSION}','${newCustomer.COUNTRY_CODE}', '${newCustomer.PHONE_NO}', '${newCustomer.ADDRESS}')`;
+  const queery = `INSERT INTO CUSTOMERS VALUES ('${newCustomer.CUSTOMER_ID}', '${newCustomer.PASSWORD}', '${newCustomer.EMAIL_ID}', '${newCustomer.CUSTOMER_NAME}', '${newCustomer.GENDER}', STR_TO_DATE('${newCustomer.DOB}','%Y-%m-%d'), '${newCustomer.ROLE}', '${newCustomer.PROFESSION}','${newCustomer.COUNTRY_CODE}', '${newCustomer.PHONE_NO}', '${newCustomer.ADDRESS}')`;
   // console.log(queery);
   const resp = await db.executeQuery(queery);
 

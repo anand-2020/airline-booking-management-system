@@ -15,6 +15,6 @@ router.post("/", protect, bookTicket);
 router
   .route("/:ticketId")
   .get(protect, protectCustomer("R", "W"), getTicket)
-  .patch(protect, protectCustomer("W"), cancelTicket);
+  .patch(protect, protectCustomer("N"), cancelTicket);
 
 export default router;

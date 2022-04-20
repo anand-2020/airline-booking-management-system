@@ -48,6 +48,8 @@ import Dialog from "layouts/dialog";
 import UserInfo from "layouts/form/userInfo";
 
 import DialCode from "../../../form/data/dialCode.js";
+import AuthContext from "authContext";
+import { useState, useContext, useEffect } from "react";
 
 function ProfileInfoCard({
   customerId,
@@ -58,10 +60,12 @@ function ProfileInfoCard({
   phoneNo,
   email,
   address,
-  isAdmin,
   profession,
   shadow,
 }) {
+  const { authenticated, currentUser, canRead, canWrite } =
+    useContext(AuthContext);
+
   return (
     <Grid container>
       <Grid container direction="column" xs={12} alignItems="center">
@@ -86,14 +90,18 @@ function ProfileInfoCard({
         >
           @{customerId}
         </MDTypography>
-        {isAdmin == true || (isAdmin === false && profession !== "OTHER") ? (
+        {canRead == true || (canRead === false && profession !== "OTHER") ? (
           <MDTypography
             variant="overline"
             fontWeight="regular"
             textAlign="center"
             sx={{ mb: 5 }}
           >
-            {isAdmin === true ? "(ADMIN)" : `(${profession})`}
+            {canWrite
+              ? "(SUPER-ADMIN)"
+              : canRead
+              ? "(ADMIN)"
+              : `(${profession})`}
           </MDTypography>
         ) : null}
       </Grid>

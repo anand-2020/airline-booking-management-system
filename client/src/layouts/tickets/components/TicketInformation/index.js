@@ -41,8 +41,7 @@ function TicketInformation(props) {
 
   const filterByDate = (date) => {
     const filtered = props.flights.filter(
-      (flight) =>
-        moment(flight.DEP_TS.substring(0, 10)).format("DD/MM/YY") === date
+      (flight) => moment(flight.DEP_TS).format("DD/MM/YY") === date
     );
     setFlights(filtered);
   };
@@ -50,7 +49,7 @@ function TicketInformation(props) {
   useEffect(() => {
     let dates = [];
     props.flights.forEach((flight) =>
-      dates.push(moment(flight.DEP_TS.substring(0, 10)).format("DD/MM/YY"))
+      dates.push(moment(flight.DEP_TS).format("DD/MM/YY"))
     );
     dates = dates.filter((x, i, a) => a.indexOf(x) === i);
     let idx = 0;
@@ -140,9 +139,7 @@ function TicketInformation(props) {
                   fare={flight.TICKET_PRICE}
                   flightDateId={flight.FLIGHT_DATE_ID}
                   delay={flight.DELAYED_BY}
-                  departureDate={moment(flight.DEP_TS.substring(0, 10)).format(
-                    "DD/MM/YY"
-                  )}
+                  departureDate={moment(flight.DEP_TS).format("DD/MM/YY")}
                   numRows={flight.NUM_ROWS}
                   numCols={flight.NUM_COLS}
                   flightId={flight.FLIGHT_ID}

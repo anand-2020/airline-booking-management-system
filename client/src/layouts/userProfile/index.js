@@ -67,7 +67,7 @@ function Overview() {
                 countryCode={currentUser.COUNTRY_CODE}
                 phoneNo={currentUser.PHONE_NO}
                 address={currentUser.ADDRESS}
-                isAdmin={currentUser.ROLE !== "N" ? true : false}
+                // isAdmin={currentUser.ROLE !== "N" ? true : false}
                 profession={currentUser.PROFESSION}
                 shadow={true}
               />

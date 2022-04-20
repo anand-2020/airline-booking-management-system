@@ -442,7 +442,7 @@ function Ticket({
         </div>
         <div class="seating_seat">
           <h2>Seat</h2>
-          <h3>${seat}</h3>
+          <h3>${isCancelled ? "CANCELLED" : seat}</h3>
         </div>
       </div>
       <div class="card_details">
