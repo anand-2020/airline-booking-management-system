@@ -45,6 +45,7 @@ import { useState, useEffect } from "react";
 import Icon from "@mui/material/Icon";
 import backgroundImage from "assets/images/sign-in/11.jpg";
 import logoName from "assets/images/logos/logo-name.png";
+import { AccessTime } from "@mui/icons-material";
 
 function Ticket({
   ticketId,
@@ -794,12 +795,12 @@ function Ticket({
           justifyContent={"center"}
         >
           {/* <Stack spacing={0} textAlign="center"> */}
-
-          <Divider flexItem>
-            <MDTypography variant="h6" fontWeight="medium">
-              {`${duration.substring(0, 2)} hr ${duration.substring(3, 5)} min`}
-            </MDTypography>
-          </Divider>
+          <AccessTime />
+          {/* <Divider flexItem> */}
+          <MDTypography variant="h6" fontWeight="medium" color="secondary">
+            {`${duration.substring(0, 2)} hr ${duration.substring(3, 5)} min`}
+          </MDTypography>
+          {/* </Divider> */}
           {/* </Stack> */}
         </Grid>
 

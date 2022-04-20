@@ -43,6 +43,7 @@ import { IconButton, Divider } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
 import Icon from "@mui/material/Icon";
+import { AccessTime } from "@mui/icons-material";
 
 function Ticket({
   srcId,
@@ -230,9 +231,13 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="medium">{srcId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold" sx={{ ml: 3, mr: -2 }}>
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {departure}
-            <MDTypography variant="overline" verticalAlign="super">
+            <MDTypography
+              variant="overline"
+              verticalAlign="super"
+              sx={{ fontSize: "0.6rem" }}
+            >
               {srcOffset[0] !== "-"
                 ? `(+${srcOffset.substring(0, 5)})`
                 : `(${srcOffset.substring(0, 6)})`}
@@ -259,11 +264,12 @@ function Ticket({
           flexDirection={"column"}
           justifyContent={"center"}
         >
-          <Divider flexItem>
-            <MDTypography variant="h6" fontWeight="medium">
-              {`${duration.substring(0, 2)} hr ${duration.substring(3, 5)} min`}
-            </MDTypography>
-          </Divider>
+          {/* <Divider flexItem> */}
+          <AccessTime />
+          <MDTypography variant="h6" fontWeight="medium" color="secondary">
+            {`${duration.substring(0, 2)} hr ${duration.substring(3, 5)} min`}
+          </MDTypography>
+          {/* </Divider> */}
         </Grid>
 
         <Grid
@@ -276,9 +282,13 @@ function Ticket({
           flexDirection={"column"}
         >
           <MDTypography fontWeight="medium">{destId}</MDTypography>
-          <MDTypography variant="h4" fontWeight="bold" sx={{ ml: 3, mr: -2 }}>
+          <MDTypography variant="h4" fontWeight="bold" sx={{ mr: -4, ml: 2 }}>
             {arrival}
-            <MDTypography variant="overline" verticalAlign="super">
+            <MDTypography
+              variant="overline"
+              verticalAlign="super"
+              sx={{ fontSize: "0.6rem" }}
+            >
               {destOffset[0] !== "-"
                 ? `(+${destOffset.substring(0, 5)})`
                 : `(${destOffset.substring(0, 6)})`}
