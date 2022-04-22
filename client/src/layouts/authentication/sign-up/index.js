@@ -1,22 +1,5 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// react-router-dom components
 import { Link, Navigate } from "react-router-dom";
 import React, { useState, useContext, useEffect } from "react";
-// @mui material components
 import {
   Button,
   Grid,
@@ -27,18 +10,11 @@ import {
   Card,
   TextField,
 } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-
-// Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
-
-// Images
 import bgImage from "assets/images/sign-in/2.jpg";
 import CountryCode from "layouts/form/data/countryCode.js";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";

@@ -61,8 +61,6 @@ export default (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
     let error = { ...err };
     error.message = err.message;
-    if (error.message.split(":")[0] === "SQLITE_CONSTRAINT")
-      error = handleDuplicateKeyDB(error.message);
     if (error.name === "JsonWebTokenError") error = handleJWTError();
     if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
 

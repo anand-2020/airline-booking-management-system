@@ -26,7 +26,7 @@ import Footer from "examples/Footer";
 
 import Transactions from "layouts/admin/components/Transactions";
 
-function Billing() {
+function Admin() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -42,4 +42,4 @@ function Billing() {
   );
 }
 
-export default Billing;
+export default Admin;

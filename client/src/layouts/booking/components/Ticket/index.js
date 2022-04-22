@@ -1,48 +1,14 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// prop-types is a library for typechecking of props
-import PropTypes from "prop-types";
-
-// @mui material components
-import Stack from "@mui/material/Stack";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-
-//@mui material icons
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
-import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
-import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
-
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDButton from "components/MDButton";
-
-// Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 import Grid from "@mui/material/Grid";
 import { IconButton, Divider } from "@mui/material";
-import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
-import Icon from "@mui/material/Icon";
 import { AccessTime } from "@mui/icons-material";
 
 function Ticket({

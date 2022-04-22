@@ -14,20 +14,13 @@ import ticketRouter from "./routes/ticketRouter.js";
 import flightRouter from "./routes/flightRouter.js";
 import airportRouter from "./routes/airportRouter.js";
 
-//ROUTERS
-
 const app = express();
 
 app.use(cors());
-
-// app.options("*", cors());
 app.use(helmet());
 
 app.use(express.json());
 app.use(cookieParser());
-
-//CORS Request
-
 //REQUEST LOGGER
 if (NODE_ENV !== "production") {
   app.use(morgan("dev"));
