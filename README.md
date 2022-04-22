@@ -4,7 +4,7 @@
   <h1>Monke Airlines</h1>
   
   <p>
-    A flight ticket booking and management application. 
+    A flight ticket booking and management application designed and built as the course project for Database Systems Laboratory, Spring 2022 at IIT Bhubaneswar 
   </p>
 
    <p>
