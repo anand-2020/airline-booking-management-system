@@ -13,8 +13,6 @@
   
 </div>
 
-<br />
-
 <!-- Table of Contents -->
 
 # :notebook_with_decorative_cover: Table of Contents
