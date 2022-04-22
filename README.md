@@ -38,7 +38,7 @@
 ### :camera: Screenshots
 
 <div align="center"> 
-  <img src="https://user-images.githubusercontent.com/62535734/164721781-69dcd728-baaa-43c5-adf0-8ac76c003bb7.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721260-fbd06b0e-49c0-4639-872d-b0864e93f1cc.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721242-2312a6df-a22f-40af-9aaf-60389a0cc688.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721911-140a2da5-18d9-488e-97df-807bc6bbd781.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721211-7da15af4-7f70-416f-b3c4-5be80b80e83f.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164722092-fc80a37e-598d-43b9-baca-d0762408bb18.png" width="30%"></img> 
+  <img src="https://user-images.githubusercontent.com/62535734/164721781-69dcd728-baaa-43c5-adf0-8ac76c003bb7.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164731324-e0458e1b-2084-4928-bea7-4ca0156c88b3.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721242-2312a6df-a22f-40af-9aaf-60389a0cc688.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721911-140a2da5-18d9-488e-97df-807bc6bbd781.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164721211-7da15af4-7f70-416f-b3c4-5be80b80e83f.png" width="30%"></img> <img src="https://user-images.githubusercontent.com/62535734/164722092-fc80a37e-598d-43b9-baca-d0762408bb18.png" width="30%"></img> 
 </div>
 
 <!-- TechStack -->
